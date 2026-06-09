@@ -1,0 +1,82 @@
+
+# Build
+
+build/
+cmake-build-*/
+out/
+bin/
+lib/
+
+# CMake
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+Makefile
+
+# Executables
+
+*.exe
+*.out
+*.app
+
+print-agent
+
+# Object files
+
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+
+# Debug
+
+*.gdb
+*.core
+core
+core.*
+
+# Logs
+
+*.log
+logs/
+
+# Generated JSON
+
+jobs.json
+
+
+# Future agent runtime files
+
+
+queue.db
+cursor
+*.db
+*.sqlite
+*.sqlite3
+
+
+# VS Code
+
+.vscode/
+# CLion
+.idea/
+# QtCreator
+
+*.pro.user
+*.pro.user.*
+
+# Vim
+
+*.swp
+*.swo
+*~
+
+# Linux temp
+
+.DS_Store
+Thumbs.db
