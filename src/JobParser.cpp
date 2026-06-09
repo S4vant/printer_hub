@@ -10,7 +10,7 @@ JobParser::parse(
     std::unordered_map<int, PrintJob> jobs;
 
     
-       std::regex re(R"(\[Job ([0-9]+)\] argv\[([0-9]+)\]=(.*))");
+std::regex re(R"(\[Job ([0-9]+)\] argv\[([0-9]+)\]="([^"]*)"")");
 
     std::smatch match;
 
