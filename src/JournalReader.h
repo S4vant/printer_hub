@@ -1,25 +1,10 @@
 #pragma once
 
-#include <systemd/sd-journal.h>
-#include <optional>
+#include <vector>
+#include <string>
 
-#include "JournalEntry.h"
-
-class JournalReader {
+class JournalReader
+{
 public:
-    JournalReader();
-    ~JournalReader();
-
-    bool open();
-
-    bool seektail();
-
-    std::optional<JournalEntry> next();
-
-private:
-    std::string getField(const char* field);
-private:
-    sd_journal* journal = nullptr;
-
+    std::vector<std::string> readMessages();
 };
-

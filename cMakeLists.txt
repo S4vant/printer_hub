@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.20)
 
-project(journal_inspector)
+project(print-agent)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -11,22 +11,27 @@ pkg_check_modules(
     libsystemd
 )
 
+find_package(nlohmann_json REQUIRED)
+
 add_executable(
-    journal-inspector
+    print-agent
 
     src/main.cpp
     src/JournalReader.cpp
+    src/JobParser.cpp
+    src/JsonWriter.cpp
 )
 
 target_include_directories(
-    journal-inspector
+    print-agent
     PRIVATE
     src
     ${SYSTEMD_INCLUDE_DIRS}
 )
 
 target_link_libraries(
-    journal-inspector
+    print-agent
     PRIVATE
     ${SYSTEMD_LIBRARIES}
+    nlohmann_json::nlohmann_json
 )

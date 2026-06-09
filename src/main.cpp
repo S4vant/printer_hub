@@ -1,67 +1,22 @@
-#include <iostream>
-#include <thread>
-#include <chrono>
-
 #include "JournalReader.h"
+#include "JobParser.h"
+#include "JsonWriter.h"
 
 int main()
 {
     JournalReader reader;
 
-    if (!reader.open())
-    {
-        std::cerr
-            << "Cannot open journal\n";
+    auto messages =
+        reader.readMessages();
 
-        return 1;
-    }
+    JobParser parser;
 
-    reader.seektail();
+    auto jobs =
+        parser.parse(messages);
 
-    std::cout
-        << "Waiting for CUPS events...\n";
+    JsonWriter writer;
 
-    while (true)
-    {
-        auto entry = reader.next();
+    writer.save(jobs);
 
-        if (!entry)
-        {
-            std::this_thread::sleep_for(
-                std::chrono::milliseconds(500));
-
-            continue;
-        }
-
-        bool isCups =
-            entry->comm == "cupsd" ||
-            entry->syslogIdentifier == "cupsd";
-
-        if (!isCups)
-        {
-            continue;
-        }
-
-        std::cout << "\n";
-        std::cout << "--------------------------------\n";
-        std::cout << "HOST    : "
-                  << entry->hostname
-                  << "\n";
-
-        std::cout << "COMM    : "
-                  << entry->comm
-                  << "\n";
-
-        std::cout << "SYSLOG  : "
-                  << entry->syslogIdentifier
-                  << "\n";
-
-        std::cout << "TIME    : "
-                  << entry->realtimeUsec
-                  << "\n";
-
-        std::cout << "MESSAGE : "
-                  << entry->message
-                  << "\n";
-    }
+    return 0;
 }

@@ -1,104 +1,54 @@
 #include "JournalReader.h"
 
-#include <iostream>
-#include <cstring>
+#include <systemd/sd-journal.h>
 
-JournalReader::JournalReader()
-    : journal(nullptr)
+std::vector<std::string>
+JournalReader::readMessages()
 {
-}
+    std::vector<std::string> messages;
 
-JournalReader::~JournalReader()
-{
-    if (journal)
+    sd_journal* journal = nullptr;
+
+    if (sd_journal_open(
+            &journal,
+            SD_JOURNAL_LOCAL_ONLY) < 0)
     {
-        sd_journal_close(journal);
-    }
-}
-
-bool JournalReader::open()
-{
-    int rc = sd_journal_open(
-        &journal,
-        SD_JOURNAL_LOCAL_ONLY);
-
-    return rc >= 0;
-}
-
-bool JournalReader::seektail()
-{
-    if (!journal)
-    {
-        return false;
+        return messages;
     }
 
-    sd_journal_seek_tail(journal);
-
-    sd_journal_previous(journal);
-
-    return true;
-}
-
-std::string JournalReader::getField(
-    const char* field)
-{
-    const void* data = nullptr;
-    size_t length = 0;
-
-    int rc = sd_journal_get_data(
+    sd_journal_add_match(
         journal,
-        field,
-        &data,
-        &length);
+        "_SYSTEMD_UNIT=cups.service",
+        0);
 
-    if (rc < 0)
+    SD_JOURNAL_FOREACH(journal)
     {
-        return {};
+        const void* data;
+        size_t length;
+
+        if (sd_journal_get_data(
+                journal,
+                "MESSAGE",
+                &data,
+                &length) < 0)
+        {
+            continue;
+        }
+
+        std::string field(
+            static_cast<const char*>(data),
+            length);
+
+        auto pos = field.find('=');
+
+        if (pos == std::string::npos)
+            continue;
+
+        messages.push_back(
+            field.substr(pos + 1));
     }
 
-    const char* ptr =
-        static_cast<const char*>(data);
+    sd_journal_close(journal);
 
-    std::string value(ptr, length);
-
-    auto pos = value.find('=');
-
-    if (pos == std::string::npos)
-    {
-        return {};
-    }
-
-    return value.substr(pos + 1);
-}
-
-std::optional<JournalEntry>
-JournalReader::next()
-{
-    int rc =
-        sd_journal_next(journal);
-
-    if (rc <= 0)
-    {
-        return std::nullopt;
-    }
-
-    JournalEntry entry;
-
-    entry.hostname =
-        getField("_HOSTNAME");
-
-    entry.comm =
-        getField("_COMM");
-
-    entry.syslogIdentifier =
-        getField("SYSLOG_IDENTIFIER");
-
-    entry.message =
-        getField("MESSAGE");
-
-    sd_journal_get_realtime_usec(
-        journal,
-        &entry.realtimeUsec);
-
-    return entry;
+    return messages;
 }
