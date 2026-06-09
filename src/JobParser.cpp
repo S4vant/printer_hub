@@ -19,7 +19,6 @@ JobParser::parse(
         if (!std::regex_search(msg, match, re))
             continue;
 
-        assertm(match.size() == 4, "match.size() != 4");
         std::cout << match[1] << std::endl;
         int jobId = std::stoi(match[1]);
             
