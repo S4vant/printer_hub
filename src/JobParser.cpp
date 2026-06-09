@@ -1,7 +1,7 @@
 #include "JobParser.h"
 #include <assert.h>   // для функции assert
 #include <regex>
-
+#include <iostream>
 std::vector<PrintJob>
 JobParser::parse(
     const std::vector<std::string>& messages)
