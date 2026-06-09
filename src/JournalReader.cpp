@@ -1,7 +1,7 @@
 #include "JournalReader.h"
 
 #include <systemd/sd-journal.h>
-
+#include <ostream>
 std::vector<std::string>
 JournalReader::readMessages()
 {

@@ -1,7 +1,8 @@
 #include "JobParser.h"
-#include <assert.h>   // для функции assert
 #include <regex>
 #include <iostream>
+#include <cassert>
+#define assertm(exp, msg) assert((void(msg), exp))
 std::vector<PrintJob>
 JobParser::parse(
     const std::vector<std::string>& messages)
@@ -20,7 +21,7 @@ JobParser::parse(
 
             std::cout << msg << std::endl;
 
-            assert( !match[1] && "Error! Text is incorrect!\n");
+            assert( (!match[1] && "Error! Text is incorrect!\n"));
         int jobId =std::stoi(match[1]);
         int arg =
             std::stoi(match[2]);
