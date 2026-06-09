@@ -49,8 +49,8 @@ JournalReader::readMessages()
         messages.push_back(
             field.substr(pos + 1));
     }
-    assert(messages.empty() && "it is test");
-
+    assert(messages.empty());
+    std::cout << messages.back() << std::endl;
     sd_journal_close(journal);
 
     return messages;
