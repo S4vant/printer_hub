@@ -2,6 +2,7 @@
 
 #include <systemd/sd-journal.h>
 #include <ostream>
+#include <iostream>
 std::vector<std::string>
 JournalReader::readMessages()
 {
