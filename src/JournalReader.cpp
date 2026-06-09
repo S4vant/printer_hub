@@ -49,8 +49,6 @@ JournalReader::readMessages()
         messages.push_back(
             field.substr(pos + 1));
     }
-
-    std::cout << messages.back() << std::endl;
     sd_journal_close(journal);
 
     return messages;
