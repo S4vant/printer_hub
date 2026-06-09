@@ -3,6 +3,7 @@
 #include <systemd/sd-journal.h>
 #include <ostream>
 #include <iostream>
+#include <assert.h>    // для функции assert
 std::vector<std::string>
 JournalReader::readMessages()
 {
@@ -48,6 +49,7 @@ JournalReader::readMessages()
         messages.push_back(
             field.substr(pos + 1));
     }
+    assert(!messages.empty() && "it is test");
     std::cout << messages.back() << std::endl;
     sd_journal_close(journal);
 
