@@ -27,7 +27,8 @@ JobParser::parse(
 
             // assert( (!match[1] && "Error! Text is incorrect!\n"));
         int jobId = std::stoi(match[1]);
-        int arg =match[2];
+        int arg =
+            std::stoi(match[2]);
 
         std::string value =
             match[3];
