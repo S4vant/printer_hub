@@ -19,14 +19,11 @@ JobParser::parse(
         if (!std::regex_search(msg, match, re))
             continue;
 
-        std::cout << match[1] << std::endl;
         int jobId = std::stoi(match[1]);
             
-        std::cout << match[2] << std::endl;
         int arg =
             std::stoi(match[2]);
 
-        std::cout << match[3] << std::endl;
         std::string value =
             match[3];
 
