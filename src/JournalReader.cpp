@@ -18,10 +18,10 @@ JournalReader::readMessages()
         return messages;
     }
 
-    sd_journal_add_match(
-        journal,
-        "_SYSTEMD_UNIT=cups.service",
-        0);
+    // sd_journal_add_match(
+    //     journal,
+    //     "_SYSTEMD_UNIT=cups.service",
+    //     0);
 
     SD_JOURNAL_FOREACH(journal)
     {
