@@ -16,10 +16,10 @@ JournalReader::readMessages()
         return messages;
     }
 
-    sd_journal_add_match(
-        journal,
-        "_SYSTEMD_UNIT=cups.service",
-        0);
+    // sd_journal_add_match(
+    //     journal,
+    //     "_SYSTEMD_UNIT=cups.service",
+    //     0);
 
     SD_JOURNAL_FOREACH(journal)
     {
@@ -47,7 +47,7 @@ JournalReader::readMessages()
         messages.push_back(
             field.substr(pos + 1));
     }
-
+    std::cout << messages.back() << std::endl;
     sd_journal_close(journal);
 
     return messages;

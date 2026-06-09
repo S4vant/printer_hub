@@ -1,5 +1,5 @@
 #include "JobParser.h"
-
+#include <assert.h>   // для функции assert
 #include <regex>
 
 std::vector<PrintJob>
@@ -18,9 +18,10 @@ JobParser::parse(
         if (!std::regex_search(msg, match, re))
             continue;
 
-        int jobId =
-            std::stoi(match[1]);
+            std::cout << msg << std::endl;
 
+            assert( !match[1] && "Error! Text is incorrect!\n");
+        int jobId =std::stoi(match[1]);
         int arg =
             std::stoi(match[2]);
 
