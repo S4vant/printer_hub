@@ -19,7 +19,11 @@ JobParser::parse(
         if (!std::regex_search(msg, match, re))
             continue;
 
-            std::cout << msg << std::endl;
+            std::cout << match[0] << std::endl;
+            std::cout << match[1] << std::endl;
+            std::cout << match[2] << std::endl;
+            std::cout << match[3] << std::endl;
+            std::cout << match[4] << std::endl;
 
             // assert( (!match[1] && "Error! Text is incorrect!\n"));
         int jobId =std::stoi(match[1]);
