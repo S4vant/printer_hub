@@ -4,15 +4,15 @@
 #include <cstring>
 
 JournalReader::JournalReader()
-    : journal_(nullptr)
+    : journal(nullptr)
 {
 }
 
 JournalReader::~JournalReader()
 {
-    if (journal_)
+    if (journal)
     {
-        sd_journal_close(journal_);
+        sd_journal_close(journal);
     }
 }
 
@@ -32,9 +32,9 @@ bool JournalReader::seektail()
         return false;
     }
 
-    sd_journal_seek_tail(journal_);
+    sd_journal_seek_tail(journal);
 
-    sd_journal_previous(journal_);
+    sd_journal_previous(journal);
 
     return true;
 }
