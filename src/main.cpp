@@ -16,7 +16,7 @@ int main()
         return 1;
     }
 
-    reader.seekTail();
+    reader.seektail();
 
     std::cout
         << "Waiting for CUPS events...\n";

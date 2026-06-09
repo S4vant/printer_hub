@@ -7,8 +7,8 @@
 
 class JournalReader {
 public:
-    JournalReader()
-    ~JournalReader()
+    JournalReader();
+    ~JournalReader();
 
     bool open();
 
@@ -17,7 +17,7 @@ public:
     std::optional<JournalEntry> next();
 
 private:
-    srd::string getField(const char* field);
+    std::string getField(const char* field);
 private:
     sd_journal* journal = nullptr;
 

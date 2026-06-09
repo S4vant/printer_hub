@@ -19,15 +19,15 @@ JournalReader::~JournalReader()
 bool JournalReader::open()
 {
     int rc = sd_journal_open(
-        &journal_,
+        &journal,
         SD_JOURNAL_LOCAL_ONLY);
 
     return rc >= 0;
 }
 
-bool JournalReader::seekTail()
+bool JournalReader::seektail()
 {
-    if (!journal_)
+    if (!journal)
     {
         return false;
     }
@@ -46,7 +46,7 @@ std::string JournalReader::getField(
     size_t length = 0;
 
     int rc = sd_journal_get_data(
-        journal_,
+        journal,
         field,
         &data,
         &length);
@@ -75,7 +75,7 @@ std::optional<JournalEntry>
 JournalReader::next()
 {
     int rc =
-        sd_journal_next(journal_);
+        sd_journal_next(journal);
 
     if (rc <= 0)
     {
@@ -97,7 +97,7 @@ JournalReader::next()
         getField("MESSAGE");
 
     sd_journal_get_realtime_usec(
-        journal_,
+        journal,
         &entry.realtimeUsec);
 
     return entry;
