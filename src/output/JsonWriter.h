@@ -4,16 +4,20 @@
 
 #include <vector>
 
+#include <nlohmann/json.hpp>
 class JsonWriter
 {
 public:
 
-    nlohmann::json build(
-        const std::vector<PrintJob>& jobs);
+
 
     bool save(
         const std::vector<PrintJob>& jobs);
 
-    bool append(
+    bool update(
+        const std::vector<PrintJob>& jobs);
+private:
+
+    nlohmann::json build(
         const std::vector<PrintJob>& jobs);
 };
