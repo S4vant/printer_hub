@@ -8,9 +8,7 @@
 class JsonWriter
 {
 public:
-
-
-
+    static constexpr const char* FILE_NAME = "print_jobs.json";
     bool save(
         const std::vector<PrintJob>& jobs);
 
