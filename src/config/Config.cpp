@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <algorithm>
+#include <string>
 
 bool Config::load(const std::string& path)
 {
