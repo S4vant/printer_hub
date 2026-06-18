@@ -59,6 +59,17 @@ std::regex re(R"(\[Job ([0-9]+)\] argv\[([0-9]+)\]="([^"]*)"")");
                 job.copies =
                     std::stoi(value);
                 break;
+            case 5:
+                std::regex creationRe(
+                    R"(time-at-creation=([0-9]+))");
+                    std::smatch creationMatch;
+
+                if (std::regex_search(value,creationMatch,creationRe))
+                    {
+                    job.createdAt =std::stoll(creationMatch[1]);
+                    }
+                break;
+                
         }
     }
 

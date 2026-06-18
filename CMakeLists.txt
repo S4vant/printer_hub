@@ -12,14 +12,25 @@ pkg_check_modules(
 )
 
 find_package(nlohmann_json REQUIRED)
+find_package(CURL REQUIRED)
 
 add_executable(
     print-agent
 
     src/main.cpp
-    src/JournalReader.cpp
-    src/JobParser.cpp
-    src/JsonWriter.cpp
+
+    src/cli/CommandLine.cpp
+
+    src/agent/Agent.cpp
+
+    src/parser/JournalReader.cpp
+    src/parser/JobParser.cpp
+
+    src/output/JsonWriter.cpp
+
+    src/config/Config.cpp
+
+    src/transport/HttpSender.cpp
 )
 
 target_include_directories(
@@ -34,4 +45,5 @@ target_link_libraries(
     PRIVATE
     ${SYSTEMD_LIBRARIES}
     nlohmann_json::nlohmann_json
+    CURL::libcurl
 )
