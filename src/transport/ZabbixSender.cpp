@@ -84,7 +84,7 @@ bool ZabbixSender::sendPacket(
 {
     std::vector<char> packet;
 
-    // ZBXD\1
+    // Заголовок протокола
     packet.push_back('Z');
     packet.push_back('B');
     packet.push_back('X');
@@ -94,7 +94,7 @@ bool ZabbixSender::sendPacket(
     uint64_t payloadSize =
         payload.size();
 
-    // длина payload в little-endian
+    // Размер payload (little endian)
     for (int i = 0; i < 8; ++i)
     {
         packet.push_back(
@@ -119,21 +119,127 @@ bool ZabbixSender::sendPacket(
                 0);
 
         if (sent <= 0)
+        {
+            std::cerr
+                << "Failed to send packet to Zabbix"
+                << std::endl;
+
             return false;
+        }
 
         totalSent += sent;
     }
 
-    // читаем ответ сервера
-    char response[1024];
+    // --------------------
+    // Читаем заголовок ответа
+    // --------------------
+
+    char header[13];
 
     ssize_t received =
         recv(
             socketFd,
-            response,
-            sizeof(response),
-            0);
-    std::cout << std::string(response, received)
-          << std::endl;
-    return received > 0;
+            header,
+            sizeof(header),
+            MSG_WAITALL);
+
+    if (received != sizeof(header))
+    {
+        std::cerr
+            << "Failed to receive Zabbix response header"
+            << std::endl;
+
+        return false;
+    }
+
+    // Проверяем сигнатуру
+    if (
+        header[0] != 'Z' ||
+        header[1] != 'B' ||
+        header[2] != 'X' ||
+        header[3] != 'D' ||
+        header[4] != 0x01)
+    {
+        std::cerr
+            << "Invalid Zabbix response header"
+            << std::endl;
+
+        return false;
+    }
+
+    uint64_t responseSize = 0;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        responseSize |=
+            static_cast<uint64_t>(
+                static_cast<unsigned char>(
+                    header[5 + i]))
+            << (i * 8);
+    }
+
+    std::string response(
+        responseSize,
+        '\0');
+
+    received =
+        recv(
+            socketFd,
+            response.data(),
+            responseSize,
+            MSG_WAITALL);
+
+    if (
+        received !=
+        static_cast<ssize_t>(
+            responseSize))
+    {
+        std::cerr
+            << "Failed to receive full Zabbix response"
+            << std::endl;
+
+        return false;
+    }
+
+    std::cout
+        << "Zabbix response:"
+        << std::endl
+        << response
+        << std::endl;
+
+    try
+    {
+        auto jsonResponse =
+            json::parse(response);
+
+        std::cout
+            << "Status: "
+            << jsonResponse.value(
+                   "response",
+                   "unknown")
+            << std::endl;
+
+        if (
+            jsonResponse.contains(
+                "info"))
+        {
+            std::cout
+                << "Info: "
+                << jsonResponse["info"]
+                << std::endl;
+        }
+
+        return
+            jsonResponse.value(
+                "response",
+                "") == "success";
+    }
+    catch (...)
+    {
+        std::cerr
+            << "Unable to parse Zabbix response"
+            << std::endl;
+
+        return false;
+    }
 }
