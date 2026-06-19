@@ -115,13 +115,24 @@ void Agent::sync()
     update();
     send();
 }
+void Agent::zabbixsend()
+{
 
-ZabbixSender sender;
 
-sender.send(
-    config.get("ZABBIX_SERVER"),
-    std::stoi(
-        config.get("ZABBIX_PORT")),
-    config.get("ZABBIX_HOST"),
-    config.get("ZABBIX_KEY"),
-    report.dump());
+    ZabbixSender sender;
+
+    if (!sender.send(
+        config.get("ZABBIX_SERVER"),
+        std::stoi(
+            config.get("ZABBIX_PORT")),
+        config.get("ZABBIX_HOST"),
+        config.get("ZABBIX_KEY"),
+        report.dump());):
+
+    {
+        std::cerr
+            << "Failed to send zabbix report"
+            << std::endl;
+    }
+
+}
