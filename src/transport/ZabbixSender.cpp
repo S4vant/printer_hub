@@ -31,6 +31,12 @@ bool ZabbixSender::send(
 
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
+    std::cout
+    << "Connecting to "
+    << server
+    << ":"
+    << port
+    << std::endl;
 
     if (
         inet_pton(

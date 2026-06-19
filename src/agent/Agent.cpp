@@ -117,19 +117,46 @@ void Agent::sync()
 }
 void Agent::zabbixsend()
 {
-
     Config config;
-    ZabbixSender sender;
-    nlohmann::json report;
 
-    bool result = (sender.send(
-        config.get("ZABBIX_SERVER"),
-        std::stoi(
-            config.get("ZABBIX_PORT")),
-        config.get("ZABBIX_HOST"),
-        config.get("ZABBIX_KEY"),
-        report.dump())
-        );
+    if (!config.load(".env"))
+    {
+        std::cerr
+            << "Failed to load .env"
+            << std::endl;
+        return;
+    }
+
+    std::cout
+        << "Server: "
+        << config.get("ZABBIX_HOST")
+        << std::endl;
+
+    std::cout
+        << "Port: "
+        << config.get("ZABBIX_PORT")
+        << std::endl;
+
+    std::cout
+        << "Item host: "
+        << config.get("ZABBIX_ITEM_HOST")
+        << std::endl;
+
+    std::cout
+        << "Item key: "
+        << config.get("ZABBIX_ITEM_KEY")
+        << std::endl;
+
+    ZabbixSender sender;
+
+    bool result =
+        sender.send(
+            config.get("ZABBIX_HOST"),
+            std::stoi(
+                config.get("ZABBIX_PORT")),
+            config.get("ZABBIX_ITEM_HOST"),
+            config.get("ZABBIX_ITEM_KEY"),
+            "test");
 
     if (!result)
     {
@@ -137,5 +164,4 @@ void Agent::zabbixsend()
             << "Failed to send zabbix report"
             << std::endl;
     }
-
 }
