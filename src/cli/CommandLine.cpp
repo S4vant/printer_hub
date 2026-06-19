@@ -34,7 +34,7 @@ Command CommandLine::parse(
         return Command::Sync;
     }
 
-    if (command == "sendzabbix")
+    if (command == "zabbixsend")
     {
         return Command::SendZabbix;
     }
