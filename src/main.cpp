@@ -27,6 +27,10 @@ int main(
         case Command::Sync:
             agent.sync();
             break;
+
+        case Command::SendZabbix:
+            agent.zabbixsend();
+            break;
     }
 
     return 0;
