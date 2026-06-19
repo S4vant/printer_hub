@@ -130,10 +130,6 @@ bool ZabbixSender::sendPacket(
         totalSent += sent;
     }
 
-    // --------------------
-    // Читаем заголовок ответа
-    // --------------------
-
     char header[13];
 
     ssize_t received =
