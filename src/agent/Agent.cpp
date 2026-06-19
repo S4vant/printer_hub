@@ -184,7 +184,7 @@ void Agent::zabbixsend()
                 config.get("ZABBIX_PORT")),
             config.get("ZABBIX_ITEM_HOST"),
             config.get("ZABBIX_ITEM_KEY"),
-            report);
+            report.dump());
 
     if (!result)
     {
