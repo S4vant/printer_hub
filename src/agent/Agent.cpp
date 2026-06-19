@@ -147,7 +147,7 @@ void Agent::zabbixsend()
         << config.get("ZABBIX_ITEM_KEY")
         << std::endl;
     
-        std::ifstream file(
+    std::ifstream file(
         "jobs.json");
 
     if (!file.is_open())
@@ -158,6 +158,7 @@ void Agent::zabbixsend()
 
         return;
     }
+    
 
     nlohmann::json report;
 
@@ -173,6 +174,9 @@ void Agent::zabbixsend()
 
         return;
     }
+    std::cout
+        << report.dump()
+        << std::endl;
 
     ZabbixSender sender;
 
