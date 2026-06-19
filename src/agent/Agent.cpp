@@ -6,6 +6,7 @@
 
 #include "config/Config.h"
 #include "transport/HttpSender.h"
+#include "transport/ZabbixSender.h"
 
 #include <fstream>
 #include <iostream>
@@ -114,3 +115,13 @@ void Agent::sync()
     update();
     send();
 }
+
+ZabbixSender sender;
+
+sender.send(
+    config.get("ZABBIX_SERVER"),
+    std::stoi(
+        config.get("ZABBIX_PORT")),
+    config.get("ZABBIX_HOST"),
+    config.get("ZABBIX_KEY"),
+    report.dump());

@@ -11,4 +11,6 @@ public:
     void send();
 
     void sync();
+
+    bool sendzabbix();
 };

@@ -91,6 +91,11 @@ src
 
 ```env
 SERVER_URL=http://192.168.1.10:8000/api/printers/report/
+ZABBIX_HOST=192.168.1.10
+ZABBIX_PORT=10051
+
+ZABBIX_ITEM_HOST=printer-server
+ZABBIX_ITEM_KEY=printer.jobs
 ```
 
 ---
