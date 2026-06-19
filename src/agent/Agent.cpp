@@ -146,8 +146,36 @@ void Agent::zabbixsend()
         << "Item key: "
         << config.get("ZABBIX_ITEM_KEY")
         << std::endl;
+    
+        std::ifstream file(
+        "jobs.json");
+
+    if (!file.is_open())
+    {
+        std::cerr
+            << "jobs.json not found"
+            << std::endl;
+
+        return;
+    }
+
+    nlohmann::json report;
+
+    try
+    {
+        file >> report;
+    }
+    catch (...)
+    {
+        std::cerr
+            << "Invalid jobs.json"
+            << std::endl;
+
+        return;
+    }
 
     ZabbixSender sender;
+
 
     bool result =
         sender.send(
@@ -156,7 +184,7 @@ void Agent::zabbixsend()
                 config.get("ZABBIX_PORT")),
             config.get("ZABBIX_ITEM_HOST"),
             config.get("ZABBIX_ITEM_KEY"),
-            "test");
+            report);
 
     if (!result)
     {
