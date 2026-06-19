@@ -12,5 +12,5 @@ public:
 
     void sync();
 
-    bool sendzabbix();
+    void sendzabbix();
 };
