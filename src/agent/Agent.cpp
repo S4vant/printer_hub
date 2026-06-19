@@ -118,7 +118,6 @@ void Agent::sync()
 void Agent::zabbixsend()
 {
 
-
     ZabbixSender sender;
 
     if (!sender.send(
