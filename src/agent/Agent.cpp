@@ -118,7 +118,9 @@ void Agent::sync()
 void Agent::zabbixsend()
 {
 
+    Config config;
     ZabbixSender sender;
+    nlohmann::json report;
 
     bool result = (sender.send(
         config.get("ZABBIX_SERVER"),
