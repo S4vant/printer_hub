@@ -39,5 +39,5 @@ Command CommandLine::parse(
         return Command::SendZabbix;
     }
 
-    return Command::Sync;
+    return Command::None;
 }

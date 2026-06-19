@@ -31,6 +31,9 @@ int main(
         case Command::SendZabbix:
             agent.zabbixsend();
             break;
+            
+        case Command::None:
+            break;
     }
 
     return 0;

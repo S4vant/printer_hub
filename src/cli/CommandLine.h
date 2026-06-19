@@ -6,7 +6,8 @@ enum class Command
     Update,
     Send,
     Sync,
-    SendZabbix
+    SendZabbix,
+    None
 };
 
 class CommandLine
