@@ -120,14 +120,16 @@ void Agent::zabbixsend()
 
     ZabbixSender sender;
 
-    if (!sender.send(
+    bool result = (sender.send(
         config.get("ZABBIX_SERVER"),
         std::stoi(
             config.get("ZABBIX_PORT")),
         config.get("ZABBIX_HOST"),
         config.get("ZABBIX_KEY"),
-        report.dump());):
+        report.dump())
+        );
 
+    if (!result)
     {
         std::cerr
             << "Failed to send zabbix report"
