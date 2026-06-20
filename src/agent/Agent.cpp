@@ -372,8 +372,8 @@ void Agent::zabbixsend_new()
 
     if (newestSent > lastSent)
     {
-
-        if (!state.save(newestSent))
+        state.setLastSent(newestSent);
+        if (!state.save())
         {
             std::cerr
                 << "Failed to save state"
