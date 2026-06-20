@@ -191,11 +191,11 @@ void Agent::zabbixsend_all()
     {
             bool result =
         sender.send(
-            config.get("ZABBIX_HOST"),
+            Сonfig.get("ZABBIX_HOST"),
             std::stoi(
-                config.get("ZABBIX_PORT")),
-            config.get("ZABBIX_ITEM_HOST"),
-            config.get("ZABBIX_ITEM_KEY"),
+                Сonfig.get("ZABBIX_PORT")),
+            Сonfig.get("ZABBIX_ITEM_HOST"),
+            Сonfig.get("ZABBIX_ITEM_KEY"),
             job.dump());
         
     if (!result)
@@ -375,7 +375,7 @@ void Agent::zabbixsend_new()
         state.setLastSent(
             newestSent);
 
-        if (!state.save())
+        if (!state.save(newestSent))
         {
             std::cerr
                 << "Failed to save state"
