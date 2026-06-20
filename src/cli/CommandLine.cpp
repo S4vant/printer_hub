@@ -34,9 +34,13 @@ Command CommandLine::parse(
         return Command::Sync;
     }
 
-    if (command == "zabbixsend")
+    if (command == "zabbixsend_all")
     {
-        return Command::SendZabbix;
+        return Command::SendZabbix_all;
+    }
+    if (command == "zabbixsend_new")
+    {
+        return Command::SendZabbix_new;
     }
 
     return Command::None;

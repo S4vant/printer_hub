@@ -12,5 +12,7 @@ public:
 
     void sync();
 
-    void zabbixsend();
+    void zabbixsend_all();
+
+    void zabbixsend_new();
 };

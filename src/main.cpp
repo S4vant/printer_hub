@@ -28,7 +28,7 @@ int main(
             agent.sync();
             break;
 
-        case Command::SendZabbix:
+        case Command::SendZabbix_new:
             agent.zabbixsend_new();
             break;
 
