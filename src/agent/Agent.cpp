@@ -28,7 +28,7 @@ void Agent::rebuild()
     if (!writer.save(jobs))
     {
         std::cerr
-            << "Failed to save jobs.json"
+            << "Failed to save" << writer.FILE_NAME
             << std::endl;
     }
 }
@@ -50,7 +50,7 @@ void Agent::update()
     if (!writer.update(jobs))
     {
         std::cerr
-            << "Failed to update jobs.json"
+            << "Failed to update" << writer.FILE_NAME
             << std::endl;
     }
 }
@@ -58,6 +58,8 @@ void Agent::update()
 void Agent::send()
 {
     Config config;
+
+    JsonWriter writer;
 
     if (!config.load(".env"))
     {
@@ -69,7 +71,7 @@ void Agent::send()
     }
 
     std::ifstream file(
-        "jobs.json");
+        writer.FILE_NAME);
 
     if (!file.is_open())
     {
@@ -89,7 +91,7 @@ void Agent::send()
     catch (...)
     {
         std::cerr
-            << "Invalid jobs.json"
+            << "Invalid" << writer.FILE_NAME
             << std::endl;
 
         return;
@@ -118,6 +120,8 @@ void Agent::sync()
 void Agent::zabbixsend()
 {
     Config config;
+
+    JsonWriter writer;
 
     if (!config.load(".env"))
     {
@@ -148,7 +152,7 @@ void Agent::zabbixsend()
         << std::endl;
     
     std::ifstream file(
-        "jobs.json");
+        writer.FILE_NAME);
 
     if (!file.is_open())
     {
@@ -160,40 +164,44 @@ void Agent::zabbixsend()
     }
     
 
-    nlohmann::json report;
+    nlohmann::json jobs;
 
     try
     {
-        file >> report;
+        file >> jobs;
     }
     catch (...)
     {
         std::cerr
-            << "Invalid jobs.json"
+            << "Invalid" << writer.FILE_NAME
             << std::endl;
-
         return;
     }
-    std::cout
-        << report.dump()
-        << std::endl;
-
+    for (const auto& job : jobs)
+    {
+        std::cout
+            << job.dump()
+            << std::endl;
+    }
     ZabbixSender sender;
 
-
-    bool result =
+    for (const auto& job : jobs)
+    {
+            bool result =
         sender.send(
             config.get("ZABBIX_HOST"),
             std::stoi(
                 config.get("ZABBIX_PORT")),
             config.get("ZABBIX_ITEM_HOST"),
             config.get("ZABBIX_ITEM_KEY"),
-            report.dump());
-
+            job.dump());
+        
     if (!result)
     {
         std::cerr
-            << "Failed to send zabbix report"
+            << "Failed to send job report"
             << std::endl;
     }
+    }
+
 }
