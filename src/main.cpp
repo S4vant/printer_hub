@@ -29,9 +29,13 @@ int main(
             break;
 
         case Command::SendZabbix:
-            agent.zabbixsend();
+            agent.zabbixsend_new();
             break;
-            
+
+        case Command::SendZabbix_all:
+            agent.zabbixsend_all();
+            break;
+
         case Command::None:
             break;
     }

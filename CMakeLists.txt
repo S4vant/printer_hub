@@ -32,6 +32,7 @@ add_executable(
 
     src/transport/HttpSender.cpp
     src/transport/ZabbixSender.cpp
+    src/data/StateStorage.cpp
 )
 
 target_include_directories(
