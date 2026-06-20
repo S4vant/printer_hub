@@ -7,7 +7,8 @@ public:
     bool save();
     bool load(); 
 
-    uint64_t getlastSent() const;
+    uint64_t getLastSent() const;
+    bool setLastSent(uint64_t timestamp);
     
 
 private:

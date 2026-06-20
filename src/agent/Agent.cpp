@@ -191,11 +191,11 @@ void Agent::zabbixsend_all()
     {
             bool result =
         sender.send(
-            Сonfig.get("ZABBIX_HOST"),
+            Config.get("ZABBIX_HOST"),
             std::stoi(
-                Сonfig.get("ZABBIX_PORT")),
-            Сonfig.get("ZABBIX_ITEM_HOST"),
-            Сonfig.get("ZABBIX_ITEM_KEY"),
+                Config.get("ZABBIX_PORT")),
+            Config.get("ZABBIX_ITEM_HOST"),
+            Config.get("ZABBIX_ITEM_KEY"),
             job.dump());
         
     if (!result)
