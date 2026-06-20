@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <c
+#include <cstdint>
 class StateStorage
 {
 public:
