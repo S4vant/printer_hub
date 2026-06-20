@@ -50,11 +50,11 @@ bool StateStorage::load()
     }
 }
 
-uint64_t StateStorage::getlastSent() const
+uint64_t StateStorage::getLastSent() const
 {
     return m_lastsent;
 }
-bool StateStorage::setLastSent(uint64_t timestamp) const
+bool StateStorage::setLastSent(uint64_t timestamp)
 {
     m_lastsent = timestamp;
     return true;
