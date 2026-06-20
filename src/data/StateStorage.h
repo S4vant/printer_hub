@@ -4,7 +4,7 @@
 class StateStorage
 {
 public:
-    bool save(uint64_t timestamp);
+    bool save();
     bool load(); 
 
     uint64_t getlastSent() const;

@@ -124,8 +124,8 @@ void Agent::zabbixsend_all()
     // Отправка в заббикс всех job из дампа в json
 
     JsonWriter writer;
-    Config Config;
-    if (!Config.load(".env"))
+    Config config;
+    if (!config.load(".env"))
     {
         std::cerr
             << "Failed to load .env"
@@ -135,22 +135,22 @@ void Agent::zabbixsend_all()
 
     std::cout
         << "Server: "
-        << Config.get("ZABBIX_HOST")
+        << config.get("ZABBIX_HOST")
         << std::endl;
 
     std::cout
         << "Port: "
-        << Config.get("ZABBIX_PORT")
+        << config.get("ZABBIX_PORT")
         << std::endl;
 
     std::cout
         << "Item host: "
-        << Config.get("ZABBIX_ITEM_HOST")
+        << config.get("ZABBIX_ITEM_HOST")
         << std::endl;
 
     std::cout
         << "Item key: "
-        << Config.get("ZABBIX_ITEM_KEY")
+        << config.get("ZABBIX_ITEM_KEY")
         << std::endl;
     
     std::ifstream file(
@@ -372,8 +372,6 @@ void Agent::zabbixsend_new()
 
     if (newestSent > lastSent)
     {
-        state.setLastSent(
-            newestSent);
 
         if (!state.save(newestSent))
         {

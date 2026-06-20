@@ -5,13 +5,13 @@
 
 using json = nlohmann::json;
 
-bool StateStorage::save(uint64_t timestamp)
+bool StateStorage::save()
 {
     json root = 
     {
         {
             "last_sent_created_at", 
-            timestamp
+            m_lastsent
         }
     };
 
@@ -22,8 +22,6 @@ bool StateStorage::save(uint64_t timestamp)
         return false;
 
     file << root.dump(4);
-
-    m_lastsent = timestamp;
 
     return true;
 }
@@ -55,4 +53,9 @@ bool StateStorage::load()
 uint64_t StateStorage::getlastSent() const
 {
     return m_lastsent;
+}
+bool StateStorage::setLastSent(uint64_t timestamp) const
+{
+    m_lastsent = timestamp;
+    return true;
 }
