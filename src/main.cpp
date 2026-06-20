@@ -28,11 +28,11 @@ int main(
             agent.sync();
             break;
 
-        case Command::SendZabbix_new:
+        case Command::SendZabbixNew:
             agent.zabbixsend_new();
             break;
 
-        case Command::SendZabbix_all:
+        case Command::SendZabbixAll:
             agent.zabbixsend_all();
             break;
 

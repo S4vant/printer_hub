@@ -124,7 +124,7 @@ void Agent::zabbixsend_all()
     // Отправка в заббикс всех job из дампа в json
 
     JsonWriter writer;
-
+    Config Config;
     if (!Config.load(".env"))
     {
         std::cerr
@@ -301,11 +301,12 @@ void Agent::zabbixsend_new()
     std::sort(
         jobs.begin(),
         jobs.end(),
-        [](const auto& a, const auto& b)
-        {
-            return a["created_at"].get<uint64_t>()
-                 < b["created_at"].get<uint64_t>();
-        });
+        [](const nlohmann::json& a,
+            const nlohmann::json& b)
+            {
+                return a["created_at"].get<uint64_t>()
+                    < b["created_at"].get<uint64_t>();
+            });
 
     uint64_t lastSent =
         state.getLastSent();

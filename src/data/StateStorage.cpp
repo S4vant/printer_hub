@@ -28,7 +28,7 @@ bool StateStorage::save(uint64_t timestamp)
     return true;
 }
 
-bool StateStorage::load(uint64_t timestamp)
+bool StateStorage::load()
 {
     std::ifstream file(
         FILE_NAME);

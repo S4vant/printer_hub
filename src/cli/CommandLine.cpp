@@ -36,11 +36,11 @@ Command CommandLine::parse(
 
     if (command == "zabbixsend_all")
     {
-        return Command::SendZabbix_all;
+        return Command::SendZabbixAll;
     }
     if (command == "zabbixsend_new")
     {
-        return Command::SendZabbix_new;
+        return Command::SendZabbixNew;
     }
 
     return Command::None;
