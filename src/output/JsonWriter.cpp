@@ -1,6 +1,7 @@
 #include "JsonWriter.h"
 
 #include <fstream>
+#include <iostream>
 
 #include <nlohmann/json.hpp>
 
@@ -42,7 +43,7 @@ nlohmann::json JsonWriter::build(
             {"user", job.user},
             {"file_name", job.fileName},
             {"copies", job.copies},
-            {"created_at", job.createdAt}
+            {"created_at", job.createdAt},
             {"host", job.host}
         });
         
