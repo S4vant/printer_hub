@@ -6,6 +6,7 @@ class StateStorage
 public:
     bool save();
     bool load(); 
+    bool addLastSent(uint64_t timestamp);
 
     uint64_t getLastSent() const;
     bool setLastSent(uint64_t timestamp);

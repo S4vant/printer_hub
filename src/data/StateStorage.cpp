@@ -19,6 +19,7 @@ bool StateStorage::save()
         FILE_NAME);
 
     if (!file.is_open())
+        COUT << "Failed to open STATE file" << endl;
         return false;
 
     file << root.dump(4);
@@ -57,5 +58,9 @@ uint64_t StateStorage::getLastSent() const
 bool StateStorage::setLastSent(uint64_t timestamp)
 {
     m_lastsent = timestamp;
+    return true;
+}
+bool StateStorage::addLastSent(uint64_t timestamp)
+{
     return true;
 }

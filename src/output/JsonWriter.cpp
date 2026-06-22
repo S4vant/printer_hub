@@ -17,6 +17,9 @@ bool JsonWriter::save(
         FILE_NAME);
 
     if (!file.is_open())
+
+        cout << "Failed to open file" << endl;
+        
         return false;
 
     file << root.dump(4);
@@ -40,7 +43,9 @@ nlohmann::json JsonWriter::build(
             {"file_name", job.fileName},
             {"copies", job.copies},
             {"created_at", job.createdAt}
+            {"host", job.host}
         });
+        
     }
 
     return root;
@@ -81,11 +86,7 @@ bool JsonWriter::update(
             continue;
         }
 
-        latestTime =
-            std::max(
-                latestTime,
-                item["created_at"]
-                    .get<uint64_t>());
+        latestTime = std::max(latestTime, item["created_at"].get<uint64_t>());
     }
 
     for (const auto& job : jobs)
@@ -100,7 +101,8 @@ bool JsonWriter::update(
             {"user", job.user},
             {"file_name", job.fileName},
             {"copies", job.copies},
-            {"created_at", job.createdAt}
+            {"created_at", job.createdAt},
+            {"host", job.host}
         });
     }
 

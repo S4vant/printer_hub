@@ -15,5 +15,7 @@ struct PrintJob
     
     uint64_t createdAt = 0;
 
+    std::string host;
+
     int copies = 0;
 };
