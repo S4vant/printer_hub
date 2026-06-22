@@ -1,5 +1,5 @@
 #include "StateStorage.h"
-
+#include <iostream>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -19,7 +19,7 @@ bool StateStorage::save()
         FILE_NAME);
 
     if (!file.is_open())
-        COUT << "Failed to open STATE file" << endl;
+        std::COUT << "Failed to open STATE file" << std::endl;
         return false;
 
     file << root.dump(4);

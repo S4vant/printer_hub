@@ -19,7 +19,7 @@ bool JsonWriter::save(
 
     if (!file.is_open())
 
-        cout << "Failed to open file" << endl;
+        std::cout << "Failed to open file" << std::endl;
         
         return false;
 
