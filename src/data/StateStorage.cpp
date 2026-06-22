@@ -19,7 +19,7 @@ bool StateStorage::save()
         FILE_NAME);
 
     if (!file.is_open())
-        std::COUT << "Failed to open STATE file" << std::endl;
+        std::cout << "Failed to open STATE file" << std::endl;
         return false;
 
     file << root.dump(4);
