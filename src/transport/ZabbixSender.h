@@ -1,5 +1,5 @@
 #pragma once
-
+#include <cstdint>
 #include <string>
 
 class ZabbixSender
@@ -12,7 +12,7 @@ public:
         const std::string& host,
         const std::string& key,
         const std::string& value,
-        uint64_t& timestamp = 0);
+        uint64_t timestamp = 0);
 
 private:
 

@@ -17,7 +17,7 @@ bool ZabbixSender::send(
     const std::string& host,
     const std::string& key,
     const std::string& value,
-    uint64_t& timestamp = 0)
+    uint64_t timestamp)
 {
     int sock =
         socket(
@@ -102,8 +102,8 @@ bool ZabbixSender::sendPacket(
     packet.push_back('B');
     packet.push_back('X');
     packet.push_back('D');
-    packet.push_back('T');
     packet.push_back(0x01);
+    packet.push_back('T');
 
     uint64_t payloadSize =
         payload.size();
@@ -168,8 +168,8 @@ bool ZabbixSender::sendPacket(
         header[1] != 'B' ||
         header[2] != 'X' ||
         header[3] != 'D' ||
-        header[4] != 'T' ||
-        header[5] != 0x01)
+        header[5] != 'T' ||
+        header[4] != 0x01)
     {
         std::cerr
             << "Invalid Zabbix response header"
