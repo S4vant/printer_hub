@@ -216,7 +216,8 @@ void Agent::zabbixsend_all()
         << maxtimestamp
         << std::endl;
     StateStorage state;
-    state.save(maxtimestamp);
+    state.setLastSent(maxtimestamp);
+    state.save();
 
 }
 void Agent::zabbixsend_new()
@@ -378,7 +379,7 @@ void Agent::zabbixsend_new()
         }
             else
         {
-            maxtimestamp = std::max(maxtimestamp, job["timestamp"]);
+            newestSent = std::max(newestSent, job["timestamp"].get<uint64_t>());
         }
 
         newestSent =
