@@ -103,7 +103,6 @@ bool ZabbixSender::sendPacket(
     packet.push_back('X');
     packet.push_back('D');
     packet.push_back(0x01);
-    packet.push_back('T');
 
     uint64_t payloadSize =
         payload.size();
@@ -144,7 +143,7 @@ bool ZabbixSender::sendPacket(
         totalSent += sent;
     }
 
-    char header[13];
+    char header[21];
 
     ssize_t received =
         recv(
@@ -168,7 +167,6 @@ bool ZabbixSender::sendPacket(
         header[1] != 'B' ||
         header[2] != 'X' ||
         header[3] != 'D' ||
-        header[5] != 'T' ||
         header[4] != 0x01)
     {
         std::cerr
