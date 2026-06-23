@@ -35,17 +35,13 @@ nlohmann::json JsonWriter::build(
     nlohmann::json root =
         nlohmann::json::array();
 
-    char hostname[HOST_NAME_MAX];
-    if (gethostname(hostname, HOST_NAME_MAX) == 0) {
-        std::string host(hostname);
-    }
-    else {
-        std::cout << "Failed to get hostname" << std::endl;
-    }
+    char hostname[256];
+    gethostname(hostname, sizeof(hostname));
+    std::string host = hostname;
 
     for (const auto& job : jobs)
     {
-        job.host = hostname;
+        job.host = host;
         root.push_back(
         {
             {"job_id", job.jobId},
