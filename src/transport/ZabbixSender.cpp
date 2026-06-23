@@ -16,7 +16,8 @@ bool ZabbixSender::send(
     int port,
     const std::string& host,
     const std::string& key,
-    const std::string& value)
+    const std::string& value,
+    uint64_t& clock = 0)
 {
     int sock =
         socket(
@@ -58,21 +59,27 @@ bool ZabbixSender::send(
         return false;
     }
 
-    json payload =
+    json item =
+{
+    {"host", host},
+    {"key", key},
+    {"value", value}
+};
+
+// Если timestamp передан
+if (clock != 0)
+{
+    item["clock"] = clock;
+}
+
+json payload =
+{
+    {"request", "sender data"},
     {
-        {"request", "sender data"},
-        {
-            "data",
-            json::array(
-            {
-                {
-                    {"host", host},
-                    {"key", key},
-                    {"value", value}
-                }
-            })
-        }
-    };
+        "data",
+        json::array({ item })
+    }
+};
 
     bool result =
         sendPacket(
@@ -95,6 +102,7 @@ bool ZabbixSender::sendPacket(
     packet.push_back('B');
     packet.push_back('X');
     packet.push_back('D');
+    packet.push_back('T');
     packet.push_back(0x01);
 
     uint64_t payloadSize =
@@ -160,7 +168,8 @@ bool ZabbixSender::sendPacket(
         header[1] != 'B' ||
         header[2] != 'X' ||
         header[3] != 'D' ||
-        header[4] != 0x01)
+        header[4] != 'T' ||
+        header[5] != 0x01)
     {
         std::cerr
             << "Invalid Zabbix response header"

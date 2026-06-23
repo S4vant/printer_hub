@@ -197,7 +197,8 @@ void Agent::zabbixsend_all()
                 config.get("ZABBIX_PORT")),
             config.get("ZABBIX_ITEM_HOST"),
             config.get("ZABBIX_ITEM_KEY"),
-            job.dump());
+            job.dump().
+            job["created_at"].get<uint64_t>());
             
     
     if (!result)
@@ -367,7 +368,8 @@ void Agent::zabbixsend_new()
                     config.get("ZABBIX_PORT")),
                 config.get("ZABBIX_ITEM_HOST"),
                 config.get("ZABBIX_ITEM_KEY"),
-                job.dump());
+                job.dump(),
+                job["created_at"].get<uint64_t>());
 
         if (!result)
         {
