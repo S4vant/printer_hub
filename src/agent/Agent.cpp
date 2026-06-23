@@ -186,7 +186,7 @@ void Agent::zabbixsend_all()
             << std::endl;
     }
     ZabbixSender sender;
-
+    uint64_t maxtimestamp = 0;
     for (const auto& job : jobs)
     {
             bool result =
@@ -197,14 +197,26 @@ void Agent::zabbixsend_all()
             config.get("ZABBIX_ITEM_HOST"),
             config.get("ZABBIX_ITEM_KEY"),
             job.dump());
-        
+            
+    
     if (!result)
     {
         std::cerr
             << "Failed to send job report"
             << std::endl;
     }
+    else
+    {
+        maxtimestamp = std::max(maxtimestamp, job["timestamp"]);
     }
+    }
+
+    std::cout
+        << "Max timestamp: "
+        << maxtimestamp
+        << std::endl;
+    StateStorage state;
+    state.save(maxtimestamp);
 
 }
 void Agent::zabbixsend_new()
@@ -221,6 +233,7 @@ void Agent::zabbixsend_new()
     }
 
     StateStorage state;
+
 
     if (!state.load())
     {
@@ -336,7 +349,7 @@ void Agent::zabbixsend_new()
 
             continue;
         }
-
+        
         if (createdAt <= lastSent)
             continue;
 
@@ -362,6 +375,10 @@ void Agent::zabbixsend_new()
                 << std::endl;
 
             break;
+        }
+            else
+        {
+            maxtimestamp = std::max(maxtimestamp, job["timestamp"]);
         }
 
         newestSent =

@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <iostream>
-
+#include <unistd.h>
 #include <nlohmann/json.hpp>
 
 using json =
@@ -27,6 +27,7 @@ bool JsonWriter::save(
 
     return true;
 }
+
 // Единое место форматирование json
 nlohmann::json JsonWriter::build(
     const std::vector<PrintJob>& jobs)
@@ -34,8 +35,17 @@ nlohmann::json JsonWriter::build(
     nlohmann::json root =
         nlohmann::json::array();
 
+    char hostname[HOST_NAME_MAX];
+    if (gethostname(hostname, HOST_NAME_MAX) == 0) {
+        std::string host(hostname);
+    }
+    else {
+        std::cout << "Failed to get hostname" << std::endl;
+    }
+
     for (const auto& job : jobs)
     {
+        job.host = host;
         root.push_back(
         {
             {"job_id", job.jobId},
@@ -76,6 +86,14 @@ bool JsonWriter::update(
             }
         }
     }
+    char hostname[HOST_NAME_MAX];
+    if (gethostname(hostname, HOST_NAME_MAX) == 0) {
+        std::string host(hostname);
+    }
+    else {
+        std::cout << "Failed to get hostname" << std::endl;
+    }
+
 
     uint64_t latestTime = 0;
 
@@ -92,8 +110,10 @@ bool JsonWriter::update(
 
     for (const auto& job : jobs)
     {
+        job.host = host;
         if (job.createdAt <= latestTime)
             continue;
+
 
         root.push_back(
         {
