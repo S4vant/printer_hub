@@ -208,7 +208,7 @@ void Agent::zabbixsend_all()
     }
     else
     {
-        maxtimestamp = std::max(maxtimestamp, job["timestamp"].get<uint64_t>());
+        maxtimestamp = std::max(maxtimestamp, job["created_at"].get<uint64_t>());
     }
     }
 
