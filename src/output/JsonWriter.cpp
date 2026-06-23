@@ -108,11 +108,11 @@ bool JsonWriter::update(
         if (job.createdAt <= latestTime)
             continue;
 
-            // заглушка
-            if (!(job.host.empty()) )
-            {
-                std::string host = std::string("localhost");
-            }
+            // // заглушка
+            // if (!(job.host.empty()) )
+            // {
+            //     std::string host = std::string("localhost");
+            // }
                 
 
         root.push_back(
