@@ -110,9 +110,11 @@ bool JsonWriter::update(
             continue;
 
             // заглушка
-            if (!(job.host) )
+            if (!(job.host.empty()) )
+            {
                 job.host = "localhost";
-                continue;
+            }
+                
 
         root.push_back(
         {
