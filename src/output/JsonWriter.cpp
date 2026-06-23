@@ -111,7 +111,7 @@ bool JsonWriter::update(
             // заглушка
             if (!(job.host.empty()) )
             {
-                host = std::string("localhost");
+                std::string host = std::string("localhost");
             }
                 
 
