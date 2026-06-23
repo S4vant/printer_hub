@@ -111,7 +111,7 @@ bool JsonWriter::update(
             // заглушка
             if (!(job.host.empty()) )
             {
-                job.host = std::string("localhost");
+                host = std::string("localhost");
             }
                 
 
@@ -123,7 +123,7 @@ bool JsonWriter::update(
             {"file_name", job.fileName},
             {"copies", job.copies},
             {"created_at", job.createdAt},
-            {"host", job.host}
+            {"host", host}
         });
     }
 
