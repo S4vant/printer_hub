@@ -11,7 +11,8 @@ public:
         int port,
         const std::string& host,
         const std::string& key,
-        const std::string& value);
+        const std::string& value,
+        uint64_t& timestamp = 0);
 
 private:
 
