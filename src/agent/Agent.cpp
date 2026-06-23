@@ -380,7 +380,7 @@ void Agent::zabbixsend_new()
         }
             else
         {
-            newestSent = std::max(newestSent, job["timestamp"].get<uint64_t>());
+            newestSent = std::max(newestSent, job["created_at"].get<uint64_t>());
         }
 
         newestSent =
