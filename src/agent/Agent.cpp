@@ -26,7 +26,7 @@ void Agent::rebuild()
 
     JsonWriter writer;
 
-    bool result = writer.save(jobs)
+    bool result = writer.save(jobs);
     if (!result)
     {
         std::cerr

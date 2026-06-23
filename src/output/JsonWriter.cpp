@@ -18,10 +18,10 @@ bool JsonWriter::save(
         FILE_NAME);
 
     if (!file.is_open())
-
+    {
         std::cout << "Failed to open file" << std::endl;
-        
         return false;
+    }
 
     file << root.dump(4);
 
