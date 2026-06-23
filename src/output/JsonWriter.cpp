@@ -45,7 +45,7 @@ nlohmann::json JsonWriter::build(
 
     for (const auto& job : jobs)
     {
-        job.host = host;
+        job.host = hostname;
         root.push_back(
         {
             {"job_id", job.jobId},
@@ -110,10 +110,13 @@ bool JsonWriter::update(
 
     for (const auto& job : jobs)
     {
-        job.host = host;
         if (job.createdAt <= latestTime)
             continue;
 
+            // заглушка
+            if (!(job.host) )
+                job.host = "localhost";
+                continue;
 
         root.push_back(
         {
