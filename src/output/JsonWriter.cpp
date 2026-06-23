@@ -41,7 +41,6 @@ nlohmann::json JsonWriter::build(
 
     for (const auto& job : jobs)
     {
-        job.host = host;
         root.push_back(
         {
             {"job_id", job.jobId},
@@ -50,7 +49,7 @@ nlohmann::json JsonWriter::build(
             {"file_name", job.fileName},
             {"copies", job.copies},
             {"created_at", job.createdAt},
-            {"host", job.host}
+            {"host", host}
         });
         
     }
