@@ -26,7 +26,8 @@ void Agent::rebuild()
 
     JsonWriter writer;
 
-    if (!writer.save(jobs))
+    bool result = writer.save(jobs)
+    if (!result)
     {
         std::cerr
             << "Failed to save" << writer.FILE_NAME
