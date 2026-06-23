@@ -17,7 +17,7 @@ bool ZabbixSender::send(
     const std::string& host,
     const std::string& key,
     const std::string& value,
-    uint64_t& clock = 0)
+    uint64_t& timestamp = 0)
 {
     int sock =
         socket(
@@ -67,9 +67,9 @@ bool ZabbixSender::send(
 };
 
 // Если timestamp передан
-if (clock != 0)
+if (timestamp != 0)
 {
-    item["clock"] = clock;
+    item["clock"] = timestamp;
 }
 
 json payload =

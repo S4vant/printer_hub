@@ -198,7 +198,7 @@ void Agent::zabbixsend_all()
             config.get("ZABBIX_ITEM_HOST"),
             config.get("ZABBIX_ITEM_KEY"),
             job.dump(),
-            clock = job["created_at"].get<uint64_t>());
+            job["created_at"].get<uint64_t>());
             
     
     if (!result)
@@ -368,7 +368,7 @@ void Agent::zabbixsend_new()
                 config.get("ZABBIX_ITEM_HOST"),
                 config.get("ZABBIX_ITEM_KEY"),
                 job.dump(),
-                clock = job["created_at"].get<uint64_t>());
+                job["created_at"].get<uint64_t>());
 
         if (!result)
         {
