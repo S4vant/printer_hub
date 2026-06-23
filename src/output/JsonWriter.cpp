@@ -123,7 +123,7 @@ bool JsonWriter::update(
             {"file_name", job.fileName},
             {"copies", job.copies},
             {"created_at", job.createdAt},
-            {"host", host}
+            {"host", job.host}
         });
     }
 
