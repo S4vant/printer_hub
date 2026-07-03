@@ -409,3 +409,26 @@ void Agent::zabbixsend_new()
         << " new jobs"
         << std::endl;
 }
+
+
+void Agent::help()
+{
+    std::cout
+        << "help: show this help message"
+        << std::endl;
+
+    std::cout
+        << "rebuild: rebuild json file from journal messages"
+        << std::endl;
+
+    std::cout
+        << "update: update json file from journal messages"
+        << std::endl;
+
+    std::cout
+        << "zabbixsen_all: send all jobs to zabbix"
+        << std::endl;
+    std::
+        << "zabbixsend_new: send new jobs to zabbix and update state"
+        << std::endl;
+}

@@ -42,6 +42,10 @@ Command CommandLine::parse(
     {
         return Command::SendZabbixNew;
     }
+    if (command == "help")
+    {
+        return Command::Help;
+    }
 
     return Command::None;
 }
