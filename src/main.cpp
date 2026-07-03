@@ -40,9 +40,7 @@ int main(
             break;
 
         case Command::None:
-            std::cerr << "Command not found or not implemented" << std::endl
-                <<"Available commands: rebuild, update, send, sync, send_zabbix_new, send_zabbix_all, help"
-                << std::endl;
+            agent.ecxeption();
             break;
     }
 

@@ -432,3 +432,11 @@ void Agent::help()
         << "zabbixsend_new: send new jobs to zabbix and update state"
         << std::endl;
 }
+
+void Agent::exception()
+{
+    std::cerr
+        << "Exception: "
+        << std::current_exception()->what()
+        << std::endl;
+}

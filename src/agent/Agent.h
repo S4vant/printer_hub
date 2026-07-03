@@ -17,4 +17,6 @@ public:
     void zabbixsend_new();
 
     void help();
+
+    void exception();
 };
