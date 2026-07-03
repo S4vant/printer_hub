@@ -40,7 +40,7 @@ int main(
             break;
 
         case Command::None:
-            agent.ecxeption();
+            agent.exception();
             break;
     }
 

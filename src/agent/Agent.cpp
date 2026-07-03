@@ -428,7 +428,7 @@ void Agent::help()
     std::cout
         << "zabbixsen_all: send all jobs to zabbix"
         << std::endl;
-    std::
+    std::cout
         << "zabbixsend_new: send new jobs to zabbix and update state"
         << std::endl;
 }
