@@ -143,7 +143,7 @@ bool ZabbixSender::sendPacket(
         totalSent += sent;
     }
 
-    char header[21];
+    char header[13];
 
     ssize_t received =
         recv(

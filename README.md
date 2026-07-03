@@ -224,3 +224,20 @@ make
 - интеграцию с Zabbix;
 - работу в режиме системного сервиса (`systemd service`);
 - централизованную систему учёта принтеров и печати.
+
+## как вариант разрешения проблем с nlohmann:
+mkdir -p third_party/nlohmann
+curl -L https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp \
+-o third_party/nlohmann/json.hpp
+Тогда в CMakeLists.txt можно убрать:
+
+find_package(nlohmann_json REQUIRED)
+
+и вместо этого добавить:
+
+target_include_directories(
+    print-agent PRIVATE
+    src
+    third_party
+    ${SYSTEMD_INCLUDE_DIRS}
+)
