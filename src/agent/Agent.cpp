@@ -435,8 +435,8 @@ void Agent::help()
 
 void Agent::exception()
 {
-    std::cerr
-        << "Exception: "
-        << std::current_exception()->what()
+    std::cout
+        << "Command not found. Use help if you need help"
+        
         << std::endl;
 }
