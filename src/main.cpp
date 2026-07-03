@@ -1,22 +1,44 @@
-#include "JournalReader.h"
-#include "JobParser.h"
-#include "JsonWriter.h"
+#include "agent/Agent.h"
+#include "cli/CommandLine.h"
 
-int main()
+int main(
+    int argc,
+    char* argv[])
 {
-    JournalReader reader;
+    Agent agent;
 
-    auto messages =
-        reader.readMessages();
+    switch (
+        CommandLine::parse(
+            argc,
+            argv))
+    {
+        case Command::Rebuild:
+            agent.rebuild();
+            break;
 
-    JobParser parser;
+        case Command::Update:
+            agent.update();
+            break;
 
-    auto jobs =
-        parser.parse(messages);
+        case Command::Send:
+            agent.send();
+            break;
 
-    JsonWriter writer;
+        case Command::Sync:
+            agent.sync();
+            break;
 
-    writer.save(jobs);
+        case Command::SendZabbixNew:
+            agent.zabbixsend_new();
+            break;
+
+        case Command::SendZabbixAll:
+            agent.zabbixsend_all();
+            break;
+
+        case Command::None:
+            break;
+    }
 
     return 0;
 }
