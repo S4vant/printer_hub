@@ -8,7 +8,7 @@ Command CommandLine::parse(
 {
     if (argc < 2)
     {
-        return Command::Sync;
+        return Command::None;
     }
 
     std::string command =
