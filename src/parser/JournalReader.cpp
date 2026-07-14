@@ -60,6 +60,7 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
 {
     std::vector<std::string> messages;
     sd_journal* journal = nullptr;
+    int r;
 
     if (sd_journal_open(
             &journal,
@@ -72,14 +73,14 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
 
     r = sd_journal_seek_tail(journal);
     if (r < 0) {
-        std::cerr << "Ошибка перемещения в конец логов: " << std::strerror(-r) << std::endl;
+        std::cerr << "Ошибка перемещения в конец логов: " << std::perror(-r) << std::endl;
         sd_journal_close(journal);
         return 1;
     }
 
     bool found = false;
 
-    SD_JOURNAL_FOREACH_BACKWARD(journal)
+    SD_JOURNAL_FOREACH_BACKWARDS(journal)
     {
         const void* data;
         size_t length;
