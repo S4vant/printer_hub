@@ -7,5 +7,5 @@ class JournalReader
 {
 public:
     std::vector<std::string> readMessages();
-    std::vector<std::string> readMessagesByTimestamp(uint64_t);
+    std::vector<std::string> readMessagesByTimestamp(uint64_t timestamp);
 };
