@@ -104,26 +104,36 @@ JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
         std::string message =
         field.substr(pos + 1);
 
-        if (message.find("argv[5]") != std::string::npos)
+        auto p =
+        message.find("time-at-creation=");
+
+        if (p != std::string::npos)
         {
-            auto p =
-                message.find("time-at-creation=");
+            constexpr auto key =
+                "time-at-creation=";
 
-            if (p != std::string::npos)
-            {
-                p += 17;
+            p += sizeof(key) - 1;
 
-                uint64_t createdAt =
-                    std::strtoull(
-                        message.c_str() + p,
-                        nullptr,
-                        10);
+            const char* ptr =
+                message.c_str() + p;
 
-                if (createdAt <= lastTimestamp)
-                    break;
-            }
+            char* end = nullptr;
+
+            uint64_t createdAt =
+                std::strtoull(
+                    ptr,
+                    &end,
+                    10);
+
+            std::cout
+                << "parsed timestamp = "
+                << createdAt
+                << std::endl;
+
+            if (createdAt <= lastTimestamp)
+                break;
         }
-
+        std::cout << message << std::endl;
     messages.push_back(
         std::move(message));
 }
