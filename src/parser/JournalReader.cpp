@@ -73,9 +73,9 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
 
     r = sd_journal_seek_tail(journal);
     if (r < 0) {
-        std::cerr << "Ошибка перемещения в конец логов: " << std::perror(-r) << std::endl;
+        std::cerr << "Ошибка перемещения в конец логов: " << -r << std::endl;
         sd_journal_close(journal);
-        return 1;
+        return messages;
     }
 
     bool found = false;
