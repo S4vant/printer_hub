@@ -57,7 +57,7 @@ JournalReader::readMessages()
     return messages;
 }
 std::vector<std::string>
-JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
+JournalReader::ReadLastMessagesByTimestamp(uint64_t timestamp)
 {
     std::vector<std::string> messages;
     sd_journal* journal = nullptr;
@@ -118,7 +118,7 @@ JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
             uint64_t createdAt =
                 std::stoull(match[1]);
 
-            if (createdAt <= lastTimestamp)
+            if (createdAt <= timestamp)
             {
                 break;
             }
