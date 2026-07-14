@@ -4,6 +4,7 @@
 #include <ostream>
 #include <iostream>
 #include <assert.h>    // для функции assert
+#include <regex>
 
 
 std::vector<std::string>
@@ -56,11 +57,11 @@ JournalReader::readMessages()
     return messages;
 }
 std::vector<std::string>
-JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
+std::vector<std::string>
+JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
 {
     std::vector<std::string> messages;
     sd_journal* journal = nullptr;
-    int r;
 
     if (sd_journal_open(
             &journal,
@@ -69,16 +70,14 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
         return messages;
     }
 
-
-
-    r = sd_journal_seek_tail(journal);
-    if (r < 0) {
-        std::cerr << "Ошибка перемещения в конец логов: " << -r << std::endl;
+    if (sd_journal_seek_tail(journal) < 0)
+    {
         sd_journal_close(journal);
         return messages;
     }
 
-    bool found = false;
+    static const std::regex creationRe(
+        R"(time-at-creation=([0-9]+))");
 
     SD_JOURNAL_FOREACH_BACKWARDS(journal)
     {
@@ -102,16 +101,43 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
 
         if (pos == std::string::npos)
             continue;
-        
-        bool flag = (field.find(std::to_string(timestamp)) != std::string::npos);
-        if (flag) {
-            found = true;
-            break;
+
+        std::string message =
+            field.substr(pos + 1);
+
+        //
+        // Если нашли time-at-creation,
+        // проверяем не дошли ли до последней отправленной работы.
+        //
+        std::smatch match;
+
+        if (std::regex_search(
+                message,
+                match,
+                creationRe))
+        {
+            uint64_t createdAt =
+                std::stoull(match[1]);
+
+            if (createdAt <= lastTimestamp)
+            {
+                break;
+            }
         }
+
         messages.push_back(
-            field.substr(pos + 1));
+            std::move(message));
     }
+
     sd_journal_close(journal);
+
+    //
+    // Читали от новых к старым,
+    // а парсер ожидает нормальный порядок.
+    //
+    std::reverse(
+        messages.begin(),
+        messages.end());
 
     return messages;
 }
