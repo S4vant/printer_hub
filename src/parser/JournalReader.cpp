@@ -4,7 +4,6 @@
 #include <ostream>
 #include <iostream>
 #include <assert.h>    // для функции assert
-#include <regex>
 
 
 std::vector<std::string>
@@ -57,7 +56,8 @@ JournalReader::readMessages()
     return messages;
 }
 std::vector<std::string>
-JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
+JournalReader::ReadLastMessagesByTimestamp(
+    uint64_t lastTimestamp)
 {
     std::vector<std::string> messages;
     sd_journal* journal = nullptr;
@@ -75,8 +75,8 @@ JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
         return messages;
     }
 
-    static const std::regex creationRe(
-        R"(time-at-creation=([0-9]+))");
+    // Переходим на последнюю запись
+    sd_journal_previous(journal);
 
     SD_JOURNAL_FOREACH_BACKWARDS(journal)
     {
@@ -102,14 +102,18 @@ JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
             continue;
 
         std::string message =
-        field.substr(pos + 1);
+            field.substr(pos + 1);
 
+        //
+        // Ищем time-at-creation в любом сообщении.
+        //
         auto p =
-        message.find("time-at-creation=");
+            message.find(
+                "time-at-creation=");
 
         if (p != std::string::npos)
         {
-            constexpr auto key =
+            constexpr char key[] =
                 "time-at-creation=";
 
             p += sizeof(key) - 1;
@@ -131,20 +135,17 @@ JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
                 << std::endl;
 
             if (createdAt <= lastTimestamp)
+            {
                 break;
+            }
         }
-        std::cout << message << std::endl;
-    messages.push_back(
-        std::move(message));
-}
-    
+
+        messages.push_back(
+            std::move(message));
+    }
 
     sd_journal_close(journal);
 
-    //
-    // Читали от новых к старым,
-    // а парсер ожидает нормальный порядок.
-    //
     std::reverse(
         messages.begin(),
         messages.end());
