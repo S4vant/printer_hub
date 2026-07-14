@@ -4,7 +4,7 @@
 #include <ostream>
 #include <iostream>
 #include <assert.h>    // для функции assert
-#include <cstdint>
+
 
 std::vector<std::string>
 JournalReader::readMessages()
