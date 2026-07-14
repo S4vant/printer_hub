@@ -43,7 +43,7 @@ void Agent::update()
     uint64_t lastUpdate = state.getLastSent();
 
     auto messages =
-        reader.ReadLastMassagesByTimestamp(lastUpdate);
+        reader.ReadLastMessagesByTimestamp(lastUpdate);
 
     JobParser parser;
 
