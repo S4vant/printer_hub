@@ -39,9 +39,11 @@ void Agent::update()
 {
     // Добавление в json новых job
     JournalReader reader;
+    StateStorage state;
+    uint64_t lastUpdate = state.getLastSent();
 
     auto messages =
-        reader.readMessages();
+        reader.ReadLastMassagesByTimestamp(lastUpdate);
 
     JobParser parser;
 
