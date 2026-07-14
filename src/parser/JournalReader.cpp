@@ -4,6 +4,7 @@
 #include <ostream>
 #include <iostream>
 #include <assert.h>    // для функции assert
+#include <algorithm>
 
 
 std::vector<std::string>
