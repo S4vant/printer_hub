@@ -102,31 +102,32 @@ JournalReader::ReadLastMessagesByTimestamp(uint64_t timestamp)
             continue;
 
         std::string message =
-            field.substr(pos + 1);
+        field.substr(pos + 1);
 
-        //
-        // Если нашли time-at-creation,
-        // проверяем не дошли ли до последней отправленной работы.
-        //
-        std::smatch match;
-
-        if (std::regex_search(
-                message,
-                match,
-                creationRe))
+        if (message.find("argv[5]") != std::string::npos)
         {
-            uint64_t createdAt =
-                std::stoull(match[1]);
+            auto p =
+                message.find("time-at-creation=");
 
-            if (createdAt <= timestamp)
+            if (p != std::string::npos)
             {
-                break;
+                p += 17;
+
+                uint64_t createdAt =
+                    std::strtoull(
+                        message.c_str() + p,
+                        nullptr,
+                        10);
+
+                if (createdAt <= lastTimestamp)
+                    break;
             }
         }
 
-        messages.push_back(
-            std::move(message));
-    }
+    messages.push_back(
+        std::move(message));
+}
+    
 
     sd_journal_close(journal);
 
