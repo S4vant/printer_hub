@@ -57,7 +57,7 @@ JournalReader::readMessages()
 
     return messages;
 }
-
+std::vector<std::string>
 JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
 {
     std::vector<std::string> messages;
@@ -105,7 +105,7 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
             continue;
         
         uint64_t timestampJob = std::stoull(field.substr(pos + 1));
-        
+
         if (timestampJob < timestamp)
             break;
         messages.push_back(
