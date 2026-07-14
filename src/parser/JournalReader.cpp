@@ -4,9 +4,7 @@
 #include <ostream>
 #include <iostream>
 #include <assert.h>    // для функции assert
-// Мб временно добавляю сюда парсер для работы с журналом
-#include "parser/JobParser.h"
-#include "data/StateStorage.h"
+#include <cstdint>
 
 std::vector<std::string>
 JournalReader::readMessages()
