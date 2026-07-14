@@ -103,10 +103,11 @@ JournalReader::ReadLastMassagesByTimestamp(uint64_t timestamp)
         if (pos == std::string::npos)
             continue;
         
-        uint64_t timestampJob = std::stoull(field.substr(pos + 1));
-
-        if (timestampJob < timestamp)
+        bool flag = (field.find(std::to_string(timestamp)) != std::string::npos);
+        if (flag) {
+            found = true;
             break;
+        }
         messages.push_back(
             field.substr(pos + 1));
     }
