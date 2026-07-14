@@ -57,7 +57,6 @@ JournalReader::readMessages()
     return messages;
 }
 std::vector<std::string>
-std::vector<std::string>
 JournalReader::ReadLastMessagesByTimestamp(uint64_t lastTimestamp)
 {
     std::vector<std::string> messages;
