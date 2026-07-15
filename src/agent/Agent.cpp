@@ -40,6 +40,7 @@ void Agent::update()
     // Добавление в json новых job
     JournalReader reader;
     StateStorage state;
+    state.load();
     uint64_t lastUpdate = state.getLastSent();
 
 
