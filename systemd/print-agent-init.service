@@ -1,0 +1,12 @@
+[Unit]
+Description=Printer agent initial rebuild and send
+After=network-online.target cups.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/print-agent rebuild
+ExecStart=/usr/local/bin/print-agent zabbixsend_all
+
+[Install]
+WantedBy=multi-user.target

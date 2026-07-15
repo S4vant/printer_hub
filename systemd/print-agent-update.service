@@ -1,0 +1,8 @@
+[Unit]
+Description=Printer agent update and send
+After=network-online.target cups.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/print-agent update
+ExecStart=/usr/local/bin/print-agent zabbixsend_new
