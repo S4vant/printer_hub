@@ -20,8 +20,9 @@ make -j$(nproc)
 echo "Installing binary..."
 
 install -Dm755 print-agent \
-    /usr/local/bin/print-agent
-
+    /usr/local/bin/print-agent/print-agent
+install -Dm755 .env \
+    /usr/local/bin/print-agent/.env
 echo "Installing systemd units..."
 
 install -Dm644 \

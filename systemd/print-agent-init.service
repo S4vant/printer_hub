@@ -5,8 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/print-agent rebuild
-ExecStart=/usr/local/bin/print-agent zabbixsend_all
+ExecStart=/usr/local/bin/print-agent/print-agent rebuild
+ExecStart=/usr/local/bin/print-agent/print-agent zabbixsend_all
 
 [Install]
 WantedBy=multi-user.target
