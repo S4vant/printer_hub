@@ -42,6 +42,9 @@ void Agent::update()
     StateStorage state;
     uint64_t lastUpdate = state.getLastSent();
 
+
+    std::cout << "at Agent::update "<< "Last update: " << lastUpdate << std::endl;
+
     auto messages =
         reader.ReadLastMessagesByTimestamp(lastUpdate);
 
