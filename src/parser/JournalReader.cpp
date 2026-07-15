@@ -131,6 +131,8 @@ JournalReader::ReadLastMessagesByTimestamp(
             std::cout
                 << "parsed timestamp = "
                 << createdAt
+                << " end = "
+                << lastTimestamp
                 << std::endl;
 
             if (createdAt <= lastTimestamp)
