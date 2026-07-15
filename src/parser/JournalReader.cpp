@@ -114,21 +114,19 @@ JournalReader::ReadLastMessagesByTimestamp(
 
         if (p != std::string::npos)
         {
+
+            std::cout << "message = " << message << std::endl;
             constexpr char key[] =
                 "time-at-creation=";
 
             p += sizeof(key) - 1;
 
-            const char* ptr =
-                message.c_str() + p;
+            const char* ptr = message.c_str() + p;
 
             char* end = nullptr;
 
             uint64_t createdAt =
-                std::strtoull(
-                    ptr,
-                    &end,
-                    10);
+                std::strtoull(ptr,&end,10);
 
             std::cout
                 << "parsed timestamp = "
