@@ -20,8 +20,12 @@ make -j$(nproc)
 
 echo "Installing binary..."
 
+if [ -f /usr/local/bin/print-agent ]; then
+    rm -f /usr/local/bin/print-agent
+fi
+
 install -Dm755 print-agent \
-    /usr/local/bin/print-agent/print-agent
+    /usr/local/bin/print-agent
 
 install -d /etc/print-agent
 install -d /var/lib/print-agent
