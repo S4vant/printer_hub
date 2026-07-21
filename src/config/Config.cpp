@@ -11,8 +11,6 @@ bool Config::load(const std::string& path = FILE_NAME)
 
     if (!file.is_open())
     {
-        // дебаг
-        std::cout << "Failed to open config file (Config::load)" << std::endl;
         return false;
     }
         
