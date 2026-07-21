@@ -4,12 +4,18 @@
 #include <algorithm>
 #include <string>
 
-bool Config::load(const std::string& path)
+// При отсутствии прямого пути к файлу конфигурации, используется по умолчанию 21.07
+bool Config::load(const std::string& path = FILE_NAME)
 {
     std::ifstream file(path);
 
     if (!file.is_open())
+    {
+        // дебаг
+        std::cout << "Failed to open config file (Config::load)" << std::endl;
         return false;
+    }
+        
 
     std::string line;
 

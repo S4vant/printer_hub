@@ -21,8 +21,13 @@ echo "Installing binary..."
 
 install -Dm755 print-agent \
     /usr/local/bin/print-agent/print-agent
-install -Dm755 .env \
-    /usr/local/bin/print-agent/.env
+
+install -d /etc/print-agent
+install -d /var/lib/print-agent
+
+install -m 644 conf/.env \
+    /etc/print-agent/.env
+    
 echo "Installing systemd units..."
 
 install -Dm644 \
