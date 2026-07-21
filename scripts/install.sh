@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
-
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+echo "Project root: $PROJECT_ROOT"
 echo "Installing dependencies..."
 
 dnf install -y \
@@ -25,9 +26,20 @@ install -Dm755 print-agent \
 install -d /etc/print-agent
 install -d /var/lib/print-agent
 
-install -m 644 conf/.env \
+echo "Installing config..."
+
+install -m 644 ${PROJECT_ROOT}/conf/.env \
     /etc/print-agent/.env
-    
+
+echo "Installing state.json..."
+if [ -f ${PROJECT_ROOT}/state.json ]; then
+    install -m 644 ${PROJECT_ROOT}/state.json \
+        /var/lib/print-agent/state.json
+fi
+echo "Installing data.json..."
+if [ -f ${PROJECT_ROOT}/print_jobs.json ]; then
+    install -m 644 ${PROJECT_ROOT}/print_jobs.json \
+        /var/lib/print-agent/print_jobs.json
 echo "Installing systemd units..."
 
 install -Dm644 \
