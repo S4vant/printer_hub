@@ -70,10 +70,10 @@ void Agent::send()
 
     JsonWriter writer;
 
-    if (!config.load(".env"))
+    if (!config.load())
     {
         std::cerr
-            << "Failed to load .env"
+            << "Failed to load config"
             << std::endl;
 
         return;
@@ -132,10 +132,11 @@ void Agent::zabbixsend_all()
 
     JsonWriter writer;
     Config config;
-    if (!config.load(".env"))
+    //в load можно добавить путь свой путь к файлу
+    if (!config.load())
     {
         std::cerr
-            << "Failed to load .env"
+            << "Failed to load config"
             << std::endl;
         return;
     }
@@ -236,7 +237,7 @@ void Agent::zabbixsend_new()
     if (!config.load())
     {
         std::cerr
-            << "Failed to load .env"
+            << "Failed to load config"
             << std::endl;
 
         return;

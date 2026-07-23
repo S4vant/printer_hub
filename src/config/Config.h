@@ -5,7 +5,7 @@ class Config
 {
 public:
     
-    bool load(const std::string& path);
+    bool load(const std::string& path = FILE_NAME);
     std::string get(const std::string& key, const std::string& defaultValue = "") const;
     std::string serverUrl() const;
 

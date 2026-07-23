@@ -5,7 +5,7 @@
 #include <string>
 
 // При отсутствии прямого пути к файлу конфигурации, используется по умолчанию 21.07
-bool Config::load(const std::string& path = FILE_NAME)
+bool Config::load(const std::string& path)
 {
     std::ifstream file(path);
 
