@@ -231,8 +231,9 @@ void Agent::zabbixsend_all()
 void Agent::zabbixsend_new()
 {
     Config config;
-
-    if (!config.load(".env"))
+    // Отправка в заббикс всех job из дампа в json
+    //в load можно добавить путь свой путь к файлу
+    if (!config.load())
     {
         std::cerr
             << "Failed to load .env"
