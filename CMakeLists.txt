@@ -44,7 +44,6 @@ target_include_directories(
 target_link_libraries(
     print-agent
     PRIVATE
-    ${SYSTEMD_LIBRARIES}
-    nlohmann_json::nlohmann_json
     CURL::libcurl
-)
+    ${SYSTEMD_LIBRARIES}
+    )

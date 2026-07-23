@@ -44,6 +44,7 @@ echo "Installing data.json..."
 if [ -f ${PROJECT_ROOT}/print_jobs.json ]; then
     install -m 644 ${PROJECT_ROOT}/print_jobs.json \
         /var/lib/print-agent/print_jobs.json
+fi
 echo "Installing systemd units..."
 
 install -Dm644 \
