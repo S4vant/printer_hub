@@ -33,7 +33,7 @@ install -d /var/lib/print-agent
 echo "Installing config..."
 
 install -m 644 ${PROJECT_ROOT}/conf/.env \
-    /etc/print-agent/.env
+    /etc/print-agent/print-agent.conf
 
 echo "Installing state.json..."
 if [ -f ${PROJECT_ROOT}/state.json ]; then
