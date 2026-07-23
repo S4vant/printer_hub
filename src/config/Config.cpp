@@ -4,12 +4,16 @@
 #include <algorithm>
 #include <string>
 
+// При отсутствии прямого пути к файлу конфигурации, используется по умолчанию 21.07
 bool Config::load(const std::string& path)
 {
     std::ifstream file(path);
 
     if (!file.is_open())
+    {
         return false;
+    }
+        
 
     std::string line;
 

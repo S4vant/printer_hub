@@ -8,6 +8,7 @@ enum class Command
     Sync,
     SendZabbixAll,
     SendZabbixNew,
+    Help,
     None
 };
 

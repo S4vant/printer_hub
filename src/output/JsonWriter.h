@@ -7,8 +7,9 @@
 #include <nlohmann/json.hpp>
 class JsonWriter
 {
+    // Единое место форматирование json по умолчанию
 public:
-    static constexpr const char* FILE_NAME = "print_jobs.json";
+    static constexpr const char* FILE_NAME = "/var/lib/print-agent/print_jobs.json";
     bool save(
         const std::vector<PrintJob>& jobs);
 

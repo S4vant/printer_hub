@@ -8,7 +8,7 @@ Command CommandLine::parse(
 {
     if (argc < 2)
     {
-        return Command::Sync;
+        return Command::None;
     }
 
     std::string command =
@@ -41,6 +41,10 @@ Command CommandLine::parse(
     if (command == "zabbixsend_new")
     {
         return Command::SendZabbixNew;
+    }
+    if (command == "help")
+    {
+        return Command::Help;
     }
 
     return Command::None;

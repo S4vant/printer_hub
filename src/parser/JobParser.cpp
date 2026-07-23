@@ -34,28 +34,28 @@ std::regex re(R"(\[Job ([0-9]+)\] argv\[([0-9]+)\]="([^"]*)"")");
         switch(arg)
         {
             case 0:
-                std::cout <<"0"<< value << std::endl;
+                std::cout <<"0 "<< value << std::endl;
                 job.printer = value;
                 break;
 
             case 1:
-                std::cout << "1" << value << std::endl;
+                std::cout << "1 " << value << std::endl;
                 job.jobId =
                     std::stoi(value);
                 break;
 
             case 2:
-                std::cout << "2" << value << std::endl;
+                std::cout << "2 " << value << std::endl;
                 job.user = value;
                 break;
 
             case 3:
-                std::cout << "3" << value << std::endl;
+                std::cout << "3 " << value << std::endl;
                 job.fileName = value;
                 break;
 
             case 4:
-                std::cout << "4" << value << std::endl;
+                std::cout << "4 " << value << std::endl;
                 job.copies =
                     std::stoi(value);
                 break;

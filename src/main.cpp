@@ -35,8 +35,12 @@ int main(
         case Command::SendZabbixAll:
             agent.zabbixsend_all();
             break;
+        case Command::Help:
+            agent.help();
+            break;
 
         case Command::None:
+            agent.exception();
             break;
     }
 

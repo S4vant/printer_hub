@@ -14,5 +14,5 @@ public:
 
 private:
     uint64_t m_lastsent = 0;
-    static constexpr const char* FILE_NAME = "state.json";
+    static constexpr const char* FILE_NAME = "/var/lib/print-agent/state.json";
 };

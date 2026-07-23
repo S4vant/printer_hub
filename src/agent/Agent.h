@@ -15,4 +15,8 @@ public:
     void zabbixsend_all();
 
     void zabbixsend_new();
+
+    void help();
+
+    void exception();
 };

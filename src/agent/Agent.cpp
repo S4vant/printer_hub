@@ -39,9 +39,15 @@ void Agent::update()
 {
     // Добавление в json новых job
     JournalReader reader;
+    StateStorage state;
+    state.load();
+    uint64_t lastUpdate = state.getLastSent();
+
+
+    std::cout << "at Agent::update "<< "Last update: " << lastUpdate << std::endl;
 
     auto messages =
-        reader.readMessages();
+        reader.ReadLastMessagesByTimestamp(lastUpdate);
 
     JobParser parser;
 
@@ -64,10 +70,10 @@ void Agent::send()
 
     JsonWriter writer;
 
-    if (!config.load(".env"))
+    if (!config.load())
     {
         std::cerr
-            << "Failed to load .env"
+            << "Failed to load config"
             << std::endl;
 
         return;
@@ -126,10 +132,11 @@ void Agent::zabbixsend_all()
 
     JsonWriter writer;
     Config config;
-    if (!config.load(".env"))
+    //в load можно добавить путь свой путь к файлу
+    if (!config.load())
     {
         std::cerr
-            << "Failed to load .env"
+            << "Failed to load config"
             << std::endl;
         return;
     }
@@ -225,11 +232,12 @@ void Agent::zabbixsend_all()
 void Agent::zabbixsend_new()
 {
     Config config;
-
-    if (!config.load(".env"))
+    // Отправка в заббикс всех job из дампа в json
+    //в load можно добавить путь свой путь к файлу
+    if (!config.load())
     {
         std::cerr
-            << "Failed to load .env"
+            << "Failed to load config"
             << std::endl;
 
         return;
@@ -407,5 +415,36 @@ void Agent::zabbixsend_new()
         << "Successfully sent "
         << sentCount
         << " new jobs"
+        << std::endl;
+}
+
+
+void Agent::help()
+{
+    std::cout
+        << "help: show this help message"
+        << std::endl;
+
+    std::cout
+        << "rebuild: rebuild json file from journal messages"
+        << std::endl;
+
+    std::cout
+        << "update: update json file from journal messages"
+        << std::endl;
+
+    std::cout
+        << "zabbixsen_all: send all jobs to zabbix"
+        << std::endl;
+    std::cout
+        << "zabbixsend_new: send new jobs to zabbix and update state"
+        << std::endl;
+}
+
+void Agent::exception()
+{
+    std::cout
+        << "Command not found. Use help if you need help"
+        
         << std::endl;
 }
