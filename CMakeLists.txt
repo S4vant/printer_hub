@@ -11,7 +11,6 @@ pkg_check_modules(
     libsystemd
 )
 
-find_package(nlohmann_json REQUIRED)
 find_package(CURL REQUIRED)
 
 add_executable(
@@ -36,9 +35,9 @@ add_executable(
 )
 
 target_include_directories(
-    print-agent
-    PRIVATE
+    print-agent PRIVATE
     src
+    third_party
     ${SYSTEMD_INCLUDE_DIRS}
 )
 
