@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+CUPS_CONF="/etc/cups/cupsd.conf"
+
+if ! grep -q "^LogLevel debug$" "$CUPS_CONF"; then
+    echo "Setting CUPS LogLevel to debug..."
+
+    if grep -q "^LogLevel" "$CUPS_CONF"; then
+        sudo sed -i 's/^LogLevel.*/LogLevel debug/' "$CUPS_CONF"
+    else
+        echo "LogLevel debug" | sudo tee -a "$CUPS_CONF" >/dev/null
+    fi
+
+    sudo systemctl restart cups
+fi
 echo "Project root: $PROJECT_ROOT"
 echo "Installing dependencies..."
 
