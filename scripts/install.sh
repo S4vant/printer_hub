@@ -76,7 +76,7 @@ install -Dm644 \
     ../systemd/print-agent-update.timer \
     /etc/systemd/system/print-agent-update.timer
 
-install -Dm644 \
+install -Dm755 \
     ../scripts/update.sh \
     /usr/local/sbin/print-agent-update.sh
 
