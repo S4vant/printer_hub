@@ -5,6 +5,7 @@
 #include <string>
 
 // При отсутствии прямого пути к файлу конфигурации, используется по умолчанию 21.07
+//это конфигурационный файл в директории программы
 bool Config::load(const std::string& path)
 {
     std::ifstream file(path);
