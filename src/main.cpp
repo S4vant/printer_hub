@@ -6,7 +6,7 @@ int main(
     char* argv[])
 {
     Agent agent;
-
+    std::cout << "service started successfully " << std::endl;
     switch (
         CommandLine::parse(
             argc,
