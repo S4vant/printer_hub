@@ -76,6 +76,12 @@ install -Dm644 \
     ../systemd/print-agent-update.timer \
     /etc/systemd/system/print-agent-update.timer
 
+install -Dm644 \
+    ../scripts/update.sh \
+    /usr/local/sbin/print-agent-update.sh
+
+echo "Reloading systemd..."
+
 systemctl daemon-reload
 
 systemctl enable print-agent-init.service
