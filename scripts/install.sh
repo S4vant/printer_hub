@@ -90,4 +90,4 @@ systemctl enable print-agent-update.timer
 systemctl start print-agent-init.service
 systemctl start print-agent-update.timer
 
-echo "Done."
+echo "installing completed"
