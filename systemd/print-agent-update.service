@@ -6,3 +6,4 @@ After=network-online.target cups.service
 Type=oneshot
 ExecStart=/usr/local/bin/print-agent update
 ExecStart=/usr/local/bin/print-agent zabbixsend_new
+ExecStart=/usr/local/sbin/print-agent-update.sh

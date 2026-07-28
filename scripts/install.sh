@@ -25,6 +25,7 @@ dnf install -y \
 
 echo "Building..."
 
+rm -rf build
 mkdir -p build
 cd build
 
