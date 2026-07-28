@@ -26,6 +26,9 @@ dnf install -y \
 echo "Building..."
 
 rm -rf build
+if [ -f ${PROJECT_ROOT}/CMakeChache.txt ]; then
+    rm -f CMakeChache.txt
+fi
 mkdir -p build
 cd build
 
