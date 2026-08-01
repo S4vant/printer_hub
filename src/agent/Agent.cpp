@@ -237,13 +237,13 @@ void Agent::zabbixsend_new()
         << std::endl;
 
     std::ifstream file(
-        writer_::FILE_NAME);
+        riter.FILE_NAME);
 
     if (!file.is_open())
     {
         std::cerr
             << "Failed to open "
-            << writer_::FILE_NAME
+            << writer_.FILE_NAME
             << std::endl;
 
         return;
