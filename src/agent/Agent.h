@@ -33,7 +33,9 @@ public:
 
     void exception();
 private:
-    bool sendToZabbix();
+    bool sendToZabbix(const std::string& key,
+    const std::string& value,
+    uint64_t clock);
     Config config_;
     StateStorage state_;
     JsonWriter writer_;

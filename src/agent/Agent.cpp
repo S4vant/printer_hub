@@ -331,7 +331,6 @@ void Agent::zabbixsend_new()
 
         bool result =
             sendToZabbix(
-                config_,
                 config_.get("ZABBIX_ITEM_KEY"),
                 job.dump(),
                 job["created_at"].get<uint64_t>());
