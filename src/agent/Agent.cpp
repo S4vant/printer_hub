@@ -1,36 +1,33 @@
 #include "Agent.h"
 
-#include "parser/JournalReader.h"
-#include "parser/JobParser.h"
-#include "output/JsonWriter.h"
 
-#include "config/Config.h"
-#include "transport/HttpSender.h"
-#include "transport/ZabbixSender.h"
-#include "data/StateStorage.h"
 
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
+
+Agent::Agent()
+{
+    if (!config_.load())
+        throw std::runtime_error("Failed to load config_");
+}
 
 void Agent::rebuild()
 {
-    JournalReader reader;
 
     auto messages =
-        reader.readMessages();
+        reader_.readMessages();
 
-    JobParser parser;
 
     auto jobs =
-        parser.parse(messages);
+        parser_.parse(messages);
 
-    JsonWriter writer;
 
-    bool result = writer.save(jobs);
+    bool result = writer_.save(jobs);
     if (!result)
     {
         std::cerr
-            << "Failed to save" << writer.FILE_NAME
+            << "Failed to save" << writer_.FILE_NAME
             << std::endl;
     }
 }
@@ -38,54 +35,37 @@ void Agent::rebuild()
 void Agent::update()
 {
     // Добавление в json новых job
-    JournalReader reader;
-    StateStorage state;
-    state.load();
-    uint64_t lastUpdate = state.getLastSent();
-
+    state_.load();
+    uint64_t lastUpdate = state_.getLastSent();
 
     std::cout << "at Agent::update "<< "Last update: " << lastUpdate << std::endl;
 
     auto messages =
-        reader.ReadLastMessagesByTimestamp(lastUpdate);
+        reader_.ReadLastMessagesByTimestamp(lastUpdate);
 
-    JobParser parser;
 
     auto jobs =
-        parser.parse(messages);
+        parser_.parse(messages);
 
-    JsonWriter writer;
 
-    if (!writer.update(jobs))
+    if (!writer_.update(jobs))
     {
         std::cerr
-            << "Failed to update" << writer.FILE_NAME
+            << "Failed to update" << writer_.FILE_NAME
             << std::endl;
     }
 }
 
 void Agent::send()
 {
-    Config config;
-
-    JsonWriter writer;
-
-    if (!config.load())
-    {
-        std::cerr
-            << "Failed to load config"
-            << std::endl;
-
-        return;
-    }
 
     std::ifstream file(
-        writer.FILE_NAME);
+        writer_.FILE_NAME);
 
     if (!file.is_open())
     {
         std::cerr
-            << writer.FILE_NAME << " not found"
+            << writer_.FILE_NAME << " not found"
             << std::endl;
 
         return;
@@ -100,7 +80,7 @@ void Agent::send()
     catch (...)
     {
         std::cerr
-            << "Invalid" << writer.FILE_NAME
+            << "Invalid" << writer_.FILE_NAME
             << std::endl;
 
         return;
@@ -110,7 +90,7 @@ void Agent::send()
 
     bool result =
         sender.send(
-            config.get("SERVER_URL"),
+            config_.get("SERVER_URL"),
             report);
 
     if (!result)
@@ -126,56 +106,63 @@ void Agent::sync()
     update();
     send();
 }
-void Agent::zabbixsend_all()
-{
-    // Отправка в заббикс всех job из дампа в json
 
-    JsonWriter writer;
-    Config config;
-    //в load можно добавить путь свой путь к файлу
-    if (!config.load())
-    {
-        std::cerr
-            << "Failed to load config"
-            << std::endl;
-        return;
-    }
+// отправка в заббикс Универсальная функция
+
+bool Agent::sendToZabbix(
+    const std::string& key,
+    const std::string& value,
+    uint64_t clock)
+{
 
     std::cout
         << "Server: "
-        << config.get("ZABBIX_HOST")
+        << config_.get("ZABBIX_HOST")
         << std::endl;
 
     std::cout
         << "Port: "
-        << config.get("ZABBIX_PORT")
+        << config_.get("ZABBIX_PORT")
         << std::endl;
 
     std::cout
         << "Item host: "
-        << config.get("ZABBIX_ITEM_HOST")
+        << config_.get("ZABBIX_ITEM_HOST")
         << std::endl;
+
+    ZabbixSender sender;
+
+    return sender.send(
+        config_.get("ZABBIX_HOST"),
+        std::stoi(config_.get("ZABBIX_PORT")),
+        config_.get("ZABBIX_ITEM_HOST"),
+        key,
+        value,
+        clock);
+}
+// 
+void Agent::zabbixsend_all()
+{
+    // Отправка в заббикс всех job из дампа в json
+    //в load можно добавить путь свой путь к файлу
 
     std::cout
         << "Item key: "
-        << config.get("ZABBIX_ITEM_KEY")
+        << config_.get("ZABBIX_ITEM_KEY")
         << std::endl;
     
     std::ifstream file(
-        writer.FILE_NAME);
+        writer_.FILE_NAME);
 
     if (!file.is_open())
     {
         std::cerr
-            << "Failed to open" << writer.FILE_NAME << " not found"
+            << "Failed to open" << writer_.FILE_NAME << " not found"
             << std::endl;
 
         return;
     }
-    
-
     nlohmann::json jobs;
-
     try
     {
         file >> jobs;
@@ -183,31 +170,35 @@ void Agent::zabbixsend_all()
     catch (...)
     {
         std::cerr
-            << "Invalid" << writer.FILE_NAME
+            << "Invalid" << writer_.FILE_NAME
             << std::endl;
         return;
     }
+
+    if (!jobs.is_array())
+    {
+        std::cerr
+            << "jobs.json is not array"
+            << std::endl;
+
+        return;
+    }
+
     for (const auto& job : jobs)
     {
         std::cout
             << job.dump()
             << std::endl;
     }
-    ZabbixSender sender;
+    
     uint64_t maxtimestamp = 0;
     for (const auto& job : jobs)
     {
-            bool result =
-        sender.send(
-            config.get("ZABBIX_HOST"),
-            std::stoi(
-                config.get("ZABBIX_PORT")),
-            config.get("ZABBIX_ITEM_HOST"),
-            config.get("ZABBIX_ITEM_KEY"),
+            bool result =  sendToZabbix(
+            config_,
+            config_.get("ZABBIX_ITEM_KEY"),
             job.dump(),
-            job["created_at"].get<uint64_t>());
-            
-    
+            job["created_at"].get<uint64_t>());  
     if (!result)
     {
         std::cerr
@@ -224,72 +215,41 @@ void Agent::zabbixsend_all()
         << "Max timestamp: "
         << maxtimestamp
         << std::endl;
-    StateStorage state;
-    state.setLastSent(maxtimestamp);
-    state.save();
+    state_.setLastSent(maxtimestamp);
+    state_.save();
 
 }
 void Agent::zabbixsend_new()
 {
-    Config config;
     // Отправка в заббикс всех job из дампа в json
     //в load можно добавить путь свой путь к файлу
-    if (!config.load())
+
+    if (!state_.load())
     {
         std::cerr
-            << "Failed to load config"
+            << "Failed to load state_"
             << std::endl;
 
         return;
     }
-
-    StateStorage state;
-
-
-    if (!state.load())
-    {
-        std::cerr
-            << "Failed to load state"
-            << std::endl;
-
-        return;
-    }
-
-    std::cout
-        << "Server: "
-        << config.get("ZABBIX_HOST")
-        << std::endl;
-
-    std::cout
-        << "Port: "
-        << config.get("ZABBIX_PORT")
-        << std::endl;
-
-    std::cout
-        << "Item host: "
-        << config.get("ZABBIX_ITEM_HOST")
-        << std::endl;
-
     std::cout
         << "Item key: "
-        << config.get("ZABBIX_ITEM_KEY")
+        << config_.get("ZABBIX_ITEM_KEY")
         << std::endl;
 
     std::ifstream file(
-        JsonWriter::FILE_NAME);
+        Jsonwriter_::FILE_NAME);
 
     if (!file.is_open())
     {
         std::cerr
             << "Failed to open "
-            << JsonWriter::FILE_NAME
+            << Jsonwriter_::FILE_NAME
             << std::endl;
 
         return;
     }
-
     nlohmann::json jobs;
-
     try
     {
         file >> jobs;
@@ -333,12 +293,12 @@ void Agent::zabbixsend_new()
             });
 
     uint64_t lastSent =
-        state.getLastSent();
+        state_.getLastSent();
 
     uint64_t newestSent =
         lastSent;
 
-    ZabbixSender sender;
+    
 
     size_t sentCount = 0;
 
@@ -370,13 +330,12 @@ void Agent::zabbixsend_new()
             << std::endl;
 
         bool result =
-            sender.send(
-                config.get("ZABBIX_HOST"),
-                std::stoi(config.get("ZABBIX_PORT")),
-                config.get("ZABBIX_ITEM_HOST"),
-                config.get("ZABBIX_ITEM_KEY"),
+            sendToZabbix(
+                config_,
+                config_.get("ZABBIX_ITEM_KEY"),
                 job.dump(),
                 job["created_at"].get<uint64_t>());
+                
 
         if (!result)
         {
@@ -400,11 +359,11 @@ void Agent::zabbixsend_new()
 
     if (newestSent > lastSent)
     {
-        state.setLastSent(newestSent);
-        if (!state.save())
+        state_.setLastSent(newestSent);
+        if (!state_.save())
         {
             std::cerr
-                << "Failed to save state"
+                << "Failed to save state_"
                 << std::endl;
 
             return;
@@ -434,10 +393,13 @@ void Agent::help()
         << std::endl;
 
     std::cout
-        << "zabbixsen_all: send all jobs to zabbix"
+        << "zabbixsend_all: send all jobs to zabbix"
         << std::endl;
     std::cout
-        << "zabbixsend_new: send new jobs to zabbix and update state"
+        << "zabbixsend_new: send new jobs to zabbix and update state_"
+        << std::endl;
+    std::cout
+        << "healthcheck: check health"
         << std::endl;
 }
 
@@ -447,4 +409,20 @@ void Agent::exception()
         << "Command not found. Use help if you need help"
         
         << std::endl;
+}
+
+void Agent::zabbixsend_healthcheck()
+{
+    std::cout
+        << "OK"
+        << std::endl;
+    // Отправка в заббикс всех job из дампа в json
+    //в load можно добавить путь свой путь к файлу
+
+    sendToZabbix(
+    config_,
+    config_.get("ZABBIX_HEALTH_KEY"),
+    "1",
+    std::time(nullptr));
+
 }
