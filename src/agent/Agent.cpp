@@ -195,7 +195,6 @@ void Agent::zabbixsend_all()
     for (const auto& job : jobs)
     {
             bool result =  sendToZabbix(
-            config_,
             config_.get("ZABBIX_ITEM_KEY"),
             job.dump(),
             job["created_at"].get<uint64_t>());  
@@ -238,13 +237,13 @@ void Agent::zabbixsend_new()
         << std::endl;
 
     std::ifstream file(
-        Jsonwriter_::FILE_NAME);
+        writer_::FILE_NAME);
 
     if (!file.is_open())
     {
         std::cerr
             << "Failed to open "
-            << Jsonwriter_::FILE_NAME
+            << writer_::FILE_NAME
             << std::endl;
 
         return;
