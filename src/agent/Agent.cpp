@@ -419,7 +419,6 @@ void Agent::zabbixsend_healthcheck()
     //в load можно добавить путь свой путь к файлу
 
     sendToZabbix(
-    config_,
     config_.get("ZABBIX_HEALTH_KEY"),
     "1",
     std::time(nullptr));
