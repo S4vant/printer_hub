@@ -3,6 +3,19 @@ set -e
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CUPS_CONF="/etc/cups/cupsd.conf"
 
+
+echo "Project root: $PROJECT_ROOT"
+echo "Installing dependencies..."
+
+dnf install -y \
+    systemd-devel \
+    gcc-c++ \
+    cmake \
+    curl-devel \
+    cups
+
+echo "Building..."
+
 if ! grep -q "^LogLevel debug$" "$CUPS_CONF"; then
     echo "Setting CUPS LogLevel to debug..."
 
@@ -14,16 +27,6 @@ if ! grep -q "^LogLevel debug$" "$CUPS_CONF"; then
 
     sudo systemctl restart cups
 fi
-echo "Project root: $PROJECT_ROOT"
-echo "Installing dependencies..."
-
-dnf install -y \
-    systemd-devel \
-    gcc-c++ \
-    cmake \
-    curl-devel
-
-echo "Building..."
 
 rm -rf build
 if [ -f ${PROJECT_ROOT}/CMakeChache.txt ]; then
