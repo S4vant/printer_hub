@@ -46,6 +46,10 @@ Command CommandLine::parse(
     {
         return Command::Help;
     }
+    if (command == "zabbix_healthcheck")
+    {
+        return Command::ZabbixHealthCheck;
+    }
 
     return Command::None;
 }

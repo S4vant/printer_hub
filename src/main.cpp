@@ -44,6 +44,9 @@ int main(
         case Command::None:
             agent.exception();
             break;
+        case Command::ZabbixHealthCheck:
+            agent.zabbixsend_healthcheck();
+            break;
     }
 
     return 0;

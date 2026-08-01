@@ -397,8 +397,9 @@ void Agent::help()
         << "zabbixsend_new: send new jobs to zabbix and update state_"
         << std::endl;
     std::cout
-        << "healthcheck: check health"
+        << "zabbix_healthcheck: check health"
         << std::endl;
+    
 }
 
 void Agent::exception()

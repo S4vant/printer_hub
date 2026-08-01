@@ -9,6 +9,7 @@ enum class Command
     SendZabbixAll,
     SendZabbixNew,
     Help,
+    ZabbixHealthCheck,
     None
 };
 
