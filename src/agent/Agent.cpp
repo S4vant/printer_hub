@@ -237,7 +237,7 @@ void Agent::zabbixsend_new()
         << std::endl;
 
     std::ifstream file(
-        writer.FILE_NAME);
+        writer_.FILE_NAME);
 
     if (!file.is_open())
     {
