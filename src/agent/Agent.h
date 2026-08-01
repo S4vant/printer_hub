@@ -1,6 +1,6 @@
 #pragma once
 #include "parser/JournalReader.h"
-#include "parser/JobRarser.h"
+#include "parser/JobParser.h"
 #include "output/JsonWriter.h"
 
 #include "config/Config.h"
