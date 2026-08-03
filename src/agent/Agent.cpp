@@ -409,14 +409,12 @@ void Agent::exception()
         
         << std::endl;
 }
-
+// По хорошему должно было называться hertbeat, но уже есть как есть
 void Agent::zabbixsend_healthcheck()
 {
     std::cout
         << "OK"
         << std::endl;
-    // Отправка в заббикс всех job из дампа в json
-    //в load можно добавить путь свой путь к файлу
 
     sendToZabbix(
     config_.get("ZABBIX_HEALTH_KEY"),
