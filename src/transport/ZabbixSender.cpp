@@ -119,14 +119,14 @@ json payload =
     }
 };
 
-    bool result =
+    bool send_result =
         sendPacket(
             sock,
             payload.dump());
 
     close(sock);
 
-    return result;
+    return send_result;
 }
 
 bool ZabbixSender::sendPacket(
