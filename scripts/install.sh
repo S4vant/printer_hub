@@ -79,7 +79,7 @@ if [ -f "$AGENT_CONF" ]; then
     if grep -q '^PROJECT_ROOT=' "$AGENT_CONF"; then
         sed -i "s|^PROJECT_ROOT=.*|PROJECT_ROOT=${PROJECT_ROOT}|" "$AGENT_CONF"
     else
-        echo "PROJECT_ROOT=${PROJECT_ROOT}" >> "$AGENT_CONF"
+        echo "\nPROJECT_ROOT=${PROJECT_ROOT}" >> "$AGENT_CONF"
     fi
 else
     echo "Warning: agent config not found at $AGENT_CONF"
