@@ -1,7 +1,7 @@
 #include "Agent.h"
 
 
-
+#include <unistd.h>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -412,13 +412,30 @@ void Agent::exception()
 // По хорошему должно было называться hertbeat, но уже есть как есть
 void Agent::zabbixsend_healthcheck()
 {
+    char hostname[HOST_NAME_MAX];
+
+    if (gethostname(hostname, sizeof(hostname)) != 0)
+    {
+        std::cerr
+            << "Failed to get hostname"
+            << std::endl;
+
+        return;
+    }
+
+    nlohmann::json health =
+    {
+        {"status", 1},
+        {"hostname", hostname}
+    };
+
     std::cout
-        << "OK"
+        << "Healthcheck: "
+        << health.dump()
         << std::endl;
 
     sendToZabbix(
-    config_.get("ZABBIX_HEALTH_KEY"),
-    "1",
-    std::time(nullptr));
-
+        config_.get("ZABBIX_HEALTH_KEY"),
+        health.dump(),
+        std::time(nullptr));
 }

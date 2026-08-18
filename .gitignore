@@ -48,7 +48,7 @@ logs/
 
 # Generated JSON
 
-jobs.json
+*.json
 
 
 # Future agent runtime files

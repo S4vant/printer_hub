@@ -1,10 +1,12 @@
 #include "ZabbixSender.h"
 
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #include <cstdint>
+#include <cstring>
 #include <vector>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -28,33 +30,69 @@ bool ZabbixSender::send(
     if (sock < 0)
         return false;
 
-    sockaddr_in addr{};
-
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
     std::cout
-    << "Connecting to "
-    << server
-    << ":"
-    << port
-    << std::endl;
+        << "Connecting to "
+        << server
+        << ":"
+        << port
+        << std::endl;
 
-    if (
-        inet_pton(
-            AF_INET,
-            server.c_str(),
-            &addr.sin_addr) <= 0)
+    addrinfo hints{};
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    std::string portString = std::to_string(port);
+    addrinfo* result = nullptr;
+    int status = getaddrinfo(
+        server.c_str(),
+        portString.c_str(),
+        &hints,
+        &result);
+
+    if (status != 0)
     {
+        std::cerr
+            << "Failed to resolve Zabbix host '"
+            << server
+            << "': "
+            << gai_strerror(status)
+            << std::endl;
         close(sock);
         return false;
     }
 
-    if (
-        connect(
-            sock,
-            reinterpret_cast<sockaddr*>(&addr),
-            sizeof(addr)) < 0)
+    bool connected = false;
+
+    for (addrinfo* entry = result; entry != nullptr; entry = entry->ai_next)
     {
+        if (entry->ai_family != AF_INET)
+            continue;
+
+        sockaddr_in addr{};
+        std::memcpy(&addr, entry->ai_addr, entry->ai_addrlen);
+        addr.sin_port = htons(port);
+
+        if (
+            connect(
+                sock,
+                entry->ai_addr,
+                entry->ai_addrlen) == 0)
+        {
+            connected = true;
+            break;
+        }
+    }
+
+    freeaddrinfo(result);
+
+    if (!connected)
+    {
+        std::cerr
+            << "Failed to connect to Zabbix host '"
+            << server
+            << "'"
+            << std::endl;
         close(sock);
         return false;
     }
@@ -81,14 +119,14 @@ json payload =
     }
 };
 
-    bool result =
+    bool send_result =
         sendPacket(
             sock,
             payload.dump());
 
     close(sock);
 
-    return result;
+    return send_result;
 }
 
 bool ZabbixSender::sendPacket(

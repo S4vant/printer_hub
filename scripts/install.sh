@@ -2,7 +2,13 @@
 set -e
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CUPS_CONF="/etc/cups/cupsd.conf"
+AGENT_CONF="/etc/print-agent/print-agent.conf"
+LOCAL_CONF="${PROJECT_ROOT}/conf/print-agent.conf"
 
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root."
+    exit 1
+fi
 
 echo "Project root: $PROJECT_ROOT"
 echo "Installing dependencies..."
@@ -20,17 +26,17 @@ if ! grep -q "^LogLevel debug$" "$CUPS_CONF"; then
     echo "Setting CUPS LogLevel to debug..."
 
     if grep -q "^LogLevel" "$CUPS_CONF"; then
-        sudo sed -i 's/^LogLevel.*/LogLevel debug/' "$CUPS_CONF"
+        sed -i 's/^LogLevel.*/LogLevel debug/' "$CUPS_CONF"
     else
-        echo "LogLevel debug" | sudo tee -a "$CUPS_CONF" >/dev/null
+        echo "LogLevel debug" | tee -a "$CUPS_CONF" >/dev/null
     fi
 
-    sudo systemctl restart cups
+    systemctl restart cups
 fi
 
 rm -rf build
-if [ -f ${PROJECT_ROOT}/CMakeChache.txt ]; then
-    rm -f CMakeChache.txt
+if [ -f ${PROJECT_ROOT}/CMakeCache.txt ]; then
+    rm -f CMakeCache.txt
 fi
 mkdir -p build
 cd build
@@ -40,9 +46,11 @@ make -j$(nproc)
 
 echo "Installing binary..."
 
-if [ -f /usr/local/bin/print-agent ]; then
-    rm -r /usr/local/bin/print-agent
+if [ -f "/usr/local/bin/print-agent" ]; then
+    rm /usr/local/bin/print-agent
 fi
+
+
 
 install -Dm755 print-agent \
     /usr/local/bin/print-agent
@@ -52,8 +60,34 @@ install -d /var/lib/print-agent
 
 echo "Installing config..."
 
-install -m 644 ${PROJECT_ROOT}/conf/print-agent.conf \
-    /etc/print-agent/print-agent.conf
+CONF_UPDATE_VALUE=""
+if [ -f "$LOCAL_CONF" ]; then
+    CONF_UPDATE_VALUE=$(grep -E '^CONF_UPDATE=' "$LOCAL_CONF" | tail -n1 | cut -d= -f2- | tr -d '\r')
+fi
+if [ -z "$CONF_UPDATE_VALUE" ] && [ -f "$AGENT_CONF" ]; then
+    CONF_UPDATE_VALUE=$(grep -E '^CONF_UPDATE=' "$AGENT_CONF" | tail -n1 | cut -d= -f2- | tr -d '\r')
+fi
+if [ -z "$CONF_UPDATE_VALUE" ]; then
+    CONF_UPDATE_VALUE="yes"
+fi
+
+if [ ! -f "$AGENT_CONF" ] || [ "$CONF_UPDATE_VALUE" = "yes" ]; then
+    echo "Installing config from ${LOCAL_CONF}..."
+    install -m 644 "$LOCAL_CONF" "$AGENT_CONF"
+else
+    echo "CONF_UPDATE is disabled; keeping existing config at $AGENT_CONF"
+fi
+
+echo "Set project root in config..."
+if [ -f "$AGENT_CONF" ]; then
+    if grep -q '^PROJECT_ROOT=' "$AGENT_CONF"; then
+        sed -i "s|^PROJECT_ROOT=.*|PROJECT_ROOT=${PROJECT_ROOT}|" "$AGENT_CONF"
+    else
+        echo "\nPROJECT_ROOT=${PROJECT_ROOT}" >> "$AGENT_CONF"
+    fi
+else
+    echo "Warning: agent config not found at $AGENT_CONF"
+fi
 
 echo "Installing state.json..."
 if [ -f ${PROJECT_ROOT}/state.json ]; then
