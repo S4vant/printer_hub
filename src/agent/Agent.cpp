@@ -420,7 +420,7 @@ void Agent::zabbixsend_healthcheck()
             << "Failed to get hostname"
             << std::endl;
 
-        return;
+        hostname = '\0';
     }
 
     nlohmann::json health =
