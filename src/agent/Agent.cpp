@@ -425,7 +425,7 @@ void Agent::zabbixsend_healthcheck()
 
     nlohmann::json health =
     {
-        {"status", 1},
+        {"status", 12},
         {"hostname", hostname}
     };
 
